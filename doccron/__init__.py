@@ -5,50 +5,66 @@
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 # __status__ = "Development"
-from datetime import datetime, timedelta
+import itertools
+from datetime import datetime
+
+
+def make_first(items, item):
+    index = items.index(item)
+    return items[index:] + items[:index]
 
 
 class Job(object):
 
     def __init__(self, jobs):
-        minute, hour, day, month, weekday = jobs
+        try:
+            minute, hour, day, month, weekday, year = jobs
+        except ValueError:
+            minute, hour, day, month, weekday = jobs
+            year = '*'
+
+        current_datetime = datetime.now().replace(second=0, microsecond=0)
+
         if minute == '*':
-            self.minute = list(range(0, 60))
+            self.minutes = make_first(list(range(0, 60)), current_datetime.minute)
         else:
-            self.minute = []
+            self.minutes = list(map(int, minute.split(',')))
         if hour == '*':
-            self.hour = list(range(0, 24))
+            self.hours = make_first(list(range(0, 24)), current_datetime.hour)
         else:
-            self.hour = []
+            self.hours = list(map(int, hour.split(',')))
         if day == '*':
-            self.day = list(range(0, 32))
+            self.days = make_first(list(range(1, 32)), current_datetime.day)
         else:
-            self.day = []
+            self.days = list(map(int, day.split(',')))
         if month == '*':
-            self.month = list(range(1, 13))
+            self.months = make_first(list(range(1, 13)), current_datetime.month)
         else:
-            self.month = []
+            self.months = list(map(int, month.split(',')))
         if weekday == '*':
-            self.weekday = list(range(1, 8))
+            self.weekdays = list(range(1, 8))
         else:
-            self.weekday = []
-        self.previous_datetime = datetime.now()
+            self.weekdays = list(map(int, weekday.split(',')))
+        if year == '*':
+            self.years = list(range(current_datetime.year, 3000))
+        else:
+            self.years = list(map(int, year.split(',')))
+
+        self.iterator = itertools.product(self.years, self.months, self.days, self.hours, self.minutes)
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        next_datetime = self.previous_datetime.replace(second=0, microsecond=0) + timedelta(minutes=1)
-        while True:
-            if next_datetime.month in self.month and \
-                    next_datetime.day in self.day and \
-                    next_datetime.hour in self.hour and \
-                    next_datetime.minute in self.minute and \
-                    next_datetime.isoweekday() in self.weekday:
-                self.previous_datetime = next_datetime
-                return next_datetime
-            else:
-                next_datetime += timedelta(minutes=1)
+        for i in self.iterator:
+            try:
+                next_datetime = datetime(*i)
+                if next_datetime <= datetime.now():
+                    continue
+                if next_datetime.isoweekday() in self.weekdays:
+                    return next_datetime
+            except ValueError:
+                continue
 
     next = __next__
 
