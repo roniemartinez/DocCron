@@ -29,6 +29,9 @@ class CronTable(object):
         if not len(self._jobs):
             return
         job, next_schedule = sorted(self._jobs.items(), key=lambda x: x[1])[0]
+        if next_schedule is None:
+            del self._jobs[job]
+            return
         try:
             self._jobs[job] = next(job)
         except StopIteration:

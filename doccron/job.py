@@ -94,7 +94,8 @@ class Job(object):
         else:
             for w in weekdays.split(','):
                 if w.isdigit():
-                    self.weekdays.append(int(w))
+                    i = int(w)
+                    self.weekdays.append(7 if i == 0 else i)  # sunday can be 0 in cron
                 elif w.isalpha():
                     self.weekdays.append(WEEKDAY_NAMES.index(w.lower()) + 1)
                 else:

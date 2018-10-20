@@ -47,7 +47,7 @@ Cron scheduler inspired by [doctest](https://en.wikipedia.org/wiki/Doctest)
 
 ## Example
 
-Run `hello()` at every 2nd minute.
+Run `hello()` at every 2nd minute and 3rd minute:
 
 ```python
 import time
@@ -58,6 +58,7 @@ import doccron
 def hello():
     """
     */2 * * * *
+    */3 * * * *
     """
     print(time.strftime('%Y-%m-%d %H:%M:%S'), "hello world")
 
