@@ -2,6 +2,45 @@
 
 Schedule with Docstring
 
+<table>
+    <tr>
+        <td>License</td>
+        <td><img src='https://img.shields.io/pypi/l/DocCron.svg'></td>
+        <td>Version</td>
+        <td><img src='https://img.shields.io/pypi/v/DocCron.svg'></td>
+    </tr>
+    <tr>
+        <td>Travis CI</td>
+        <td><img src='https://travis-ci.org/Code-ReaQtor/DocCron.svg?branch=develop'></td>
+        <td>Coverage</td>
+        <td><img src='https://codecov.io/gh/Code-ReaQtor/DocCron/branch/develop/graph/badge.svg'></td>
+    </tr>
+    <tr>
+        <td>AppVeyor</td>
+        <td><img src='https://ci.appveyor.com/api/projects/status/ceqj4tmh13r8hc79/branch/develop?svg=true'></td>
+        <td>Supported versions</td>
+        <td><img src='https://img.shields.io/pypi/pyversions/DocCron.svg'></td>
+    </tr>
+    <tr>
+        <td>Wheel</td>
+        <td><img src='https://img.shields.io/pypi/wheel/DocCron.svg'></td>
+        <td>Implementation</td>
+        <td><img src='https://img.shields.io/pypi/implementation/DocCron.svg'></td>
+    </tr>
+    <tr>
+        <td>Status</td>
+        <td><img src='https://img.shields.io/pypi/status/DocCron.svg'></td>
+        <td>Show your support</td>
+        <td><a href='https://saythanks.io/to/Code-ReaQtor'><img src='https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg'></a></td>
+    </tr>
+</table>
+
+## Installation
+
+```bash
+pip install DocCron
+```
+
 ## Description
 
 Cron scheduler inspired by [doctest](https://en.wikipedia.org/wiki/Doctest)
