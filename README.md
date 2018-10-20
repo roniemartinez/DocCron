@@ -68,10 +68,10 @@ if __name__ == '__main__':
 
 ```
 
-## TODO
+## Todo
 
+- [x] Support [Nonstandard predefined scheduling definitions](https://en.wikipedia.org/wiki/Cron#Nonstandard_predefined_scheduling_definitions)
 - [ ] Support [Non-standard characters](https://en.wikipedia.org/wiki/Cron#Non-standard_characters)
-- [ ] Support [Nonstandard predefined scheduling definitions](https://en.wikipedia.org/wiki/Cron#Nonstandard_predefined_scheduling_definitions)
 - [ ] Support [Quartz format](http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html)
 
 ## References
