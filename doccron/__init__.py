@@ -17,8 +17,25 @@ logger = logging.getLogger('doccron')
 
 
 def tokenize(jobs):
-    for jobs in jobs.splitlines():
-        yield jobs.split(None, 5)
+    for job in jobs.splitlines():  # type: str
+        job = job.strip()
+        if job.startswith('@'):
+            job = {
+                '@annually': '0 0 1 1 *',
+                '@yearly': '0 0 1 1 *',
+                '@monthly': '0 0 1 * *',
+                '@weekly': '0 0 * * 0',
+                '@daily': '0 0 * * *',
+                '@hourly': '0 * * * *',
+                '@reboot': _next_minute(),
+            }[job]
+        yield job.split(None, 5)
+
+
+def _next_minute():
+    next_minute = (datetime.now().replace(second=0, microsecond=0) + timedelta(minutes=1))
+    return '{} {} {} {} * {}'.format(next_minute.minute, next_minute.hour, next_minute.day, next_minute.month,
+                                     next_minute.year)
 
 
 def cron(jobs):
@@ -57,16 +74,24 @@ def run_jobs(simulate=False):
     if simulate:
         logger.info('Simulation started')
         return _job_iter(job_function_map)
+    _run_jobs(job_function_map)  # pragma: no cover
+
+
+def _run_jobs(job_function_map):  # pragma: no cover
+    """
+    Executes all scheduled functions. Not testable at the moment due to threading. Excluded from code coverage.
+    :param job_function_map:
+    """
     threads = []
     for next_schedule, function_object in _job_iter(job_function_map):
         thread_count = len(threads)
         if thread_count == len(job_function_map):
             while True:
-                thread = threads[thread_count-1]  # type: threading.Thread
+                thread = threads[thread_count - 1]  # type: threading.Thread
                 if not thread.is_alive():
                     interval = next_schedule - datetime.now()  # type: timedelta
                     thread = threading.Timer(interval.total_seconds(), function_object)  # type: threading.Thread
-                    threads[thread_count-1] = thread
+                    threads[thread_count - 1] = thread
                     logger.info("Scheduling function '%s' to run at %s", function_object.__name__,
                                 next_schedule.strftime('%Y-%m-%d %H:%M'))
                     thread.start()
@@ -86,6 +111,3 @@ def run_jobs(simulate=False):
         logger.info("Finished executing jobs")
     else:
         logger.info("No jobs found")
-
-
-
