@@ -24,7 +24,6 @@ def _parse_steps(item):
 class Job(object):
 
     def __init__(self, jobs):
-        self.previous_datetime = None
         self.minutes = []
         self.hours = []
         self.days = []
@@ -145,10 +144,6 @@ class Job(object):
                 if next_datetime <= datetime.now():
                     continue
                 if next_datetime.isoweekday() in self.weekdays:
-                    if self.previous_datetime and next_datetime <= self.previous_datetime:
-                        self.previous_datetime = next_datetime
-                        continue
-                    self.previous_datetime = next_datetime
                     return next_datetime
             except ValueError:
                 continue

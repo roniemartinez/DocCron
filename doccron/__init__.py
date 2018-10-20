@@ -16,8 +16,8 @@ from doccron.table import CronTable
 logger = logging.getLogger('doccron')
 
 
-def tokenize(jobs):
-    for job in jobs.splitlines():  # type: str
+def _tokenize_by_percent(jobs):
+    for job in jobs.split('%'):
         job = job.strip()
         if job.startswith('@'):
             job = {
@@ -29,7 +29,15 @@ def tokenize(jobs):
                 '@hourly': '0 * * * *',
                 '@reboot': _next_minute(),
             }[job]
+        elif job.startswith('#'):
+            continue
         yield job.split(None, 5)
+
+
+def tokenize(jobs):
+    for job in jobs.splitlines():  # type: str
+        for tokens in _tokenize_by_percent(job.strip()):
+            yield tokens
 
 
 def _next_minute():
@@ -46,19 +54,13 @@ def cron(jobs):
 def _job_iter(job_function_map):
     job_map = {}
     for job in job_function_map.keys():
-        try:
-            job_map[job] = next(job)
-        except StopIteration:
-            pass
+        job_map[job] = next(job)
     while True:
         if not len(job_map):
             return
         job, next_schedule = sorted(job_map.items(), key=lambda x: x[1])[0]
         yield next_schedule, job_function_map[job]
-        try:
-            job_map[job] = next(job)
-        except StopIteration:
-            del job_map[job]
+        job_map[job] = next(job)
 
 
 def run_jobs(simulate=False):

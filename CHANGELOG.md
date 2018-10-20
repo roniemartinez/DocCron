@@ -1,6 +1,9 @@
 # List of changes to DocCron
 
 ## [Unreleased]
+### Added
+- Support for comments (#) and percent separator (%)
+- 100% code coverage
 
 ## [0.2.0] - 2018-10-20
 ### Added

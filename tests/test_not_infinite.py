@@ -9,14 +9,7 @@ from datetime import datetime, timedelta
 
 import doccron
 
-current_minute = datetime.now().replace(second=0, microsecond=0)
-next_minute = current_minute + timedelta(minutes=1)
-
-
-def foo():
-    "{} {} {} {} * {}".format(current_minute.minute, current_minute.hour, current_minute.day, current_minute.month,
-                              current_minute.year)
-    pass
+next_minute = datetime.now().replace(second=0, microsecond=0) + timedelta(minutes=1)
 
 
 def bar():
