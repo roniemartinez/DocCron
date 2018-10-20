@@ -1,0 +1,7 @@
+setup.cfg
+README.md
+setup.py
+doccron/__init__.py
+doccron/job.py
+doccron/table.py
+CHANGELOG.md
