@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.3.0] - 2018-10-21
+### Added
+- Support for comments (#) and percent separator (%)
+- 100% code coverage
+- Support non-standard characters (#3)
+
 ## [0.2.0] - 2018-10-20
 ### Added
 - Support nonstandard predefined scheduling definitions (#2)
@@ -14,6 +20,7 @@
 - Show example application
 - Add setup.py and deploy to PyPI
 
-[Unreleased]: https://github.com/Code-ReaQtor/DocCron/compare/0.2.0...master
+[Unreleased]: https://github.com/Code-ReaQtor/DocCron/compare/0.3.0...master
+[0.3.0]: https://github.com/Code-ReaQtor/DocCron/releases/tag/0.3.0
 [0.2.0]: https://github.com/Code-ReaQtor/DocCron/releases/tag/0.2.0
 [0.1.0]: https://github.com/Code-ReaQtor/DocCron/releases/tag/0.1.0

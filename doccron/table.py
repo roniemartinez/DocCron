@@ -8,6 +8,10 @@
 from doccron.job import Job
 
 
+class InvalidSchedule(Exception):
+    pass
+
+
 class CronTable(object):
 
     # noinspection PyShadowingNames
@@ -15,11 +19,11 @@ class CronTable(object):
         self._jobs = {}
         self._previous_schedule = None
         for j in jobs:
-            job = Job(j)
             try:
-                self._jobs[job] = next(job)
-            except StopIteration:
-                pass
+                job = Job(j)
+            except ValueError:
+                raise InvalidSchedule
+            self._jobs[job] = next(job)
 
     def __iter__(self):
         return self
@@ -32,10 +36,7 @@ class CronTable(object):
         if next_schedule is None:
             del self._jobs[job]
             return
-        try:
-            self._jobs[job] = next(job)
-        except StopIteration:
-            del self._jobs[job]
+        self._jobs[job] = next(job)
         if self._previous_schedule and next_schedule <= self._previous_schedule:
             return next(self)
         self._previous_schedule = next_schedule

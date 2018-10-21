@@ -1,6 +1,6 @@
 from setuptools import setup
 
-VERSION = '0.2.0'
+VERSION = '0.3.0'
 
 setup(
     name='DocCron',
@@ -11,7 +11,7 @@ setup(
     license='MIT',
     author='Ronie Martinez',
     author_email='ronmarti18@gmail.com',
-    description='Schedule with Docstring',
+    description='Schedule with Docstrings',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     keywords=[],

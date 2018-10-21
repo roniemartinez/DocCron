@@ -8,7 +8,39 @@
 from collections import Iterable
 from datetime import datetime, timedelta
 
+# noinspection PyPackageRequirements
+import pytest
+
 import doccron
+from doccron.job import Job
+from doccron.table import InvalidSchedule
+
+
+def test_comments():
+    cron = doccron.cron('# * * * * *')
+    assert next(cron) is None
+
+
+def test_invalid_strings():
+    with pytest.raises(InvalidSchedule):
+        doccron.cron('hello')
+
+
+def test_iter_cron_table():
+    cron = iter(doccron.cron('* * * * *'))
+    assert isinstance(cron, Iterable)
+
+
+def test_iter_job():
+    job = iter(Job(['*'] * 5))
+    assert isinstance(job, Iterable)
+
+
+def test_not_repeated():
+    cron = doccron.cron('* * * * *\n* * * * *')
+    first = next(cron)
+    second = next(cron)
+    assert first < second
 
 
 def test_schedule_per_minute():

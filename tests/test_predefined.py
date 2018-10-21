@@ -40,6 +40,8 @@ def test_weekly():
     next_sunday = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     while next_sunday.isoweekday() != 7:
         next_sunday += timedelta(days=1)
+    if next_sunday <= datetime.now():
+        next_sunday += timedelta(days=7)
     assert next(cron) == next_sunday
     for _ in range(3):
         next_sunday += timedelta(days=7)
