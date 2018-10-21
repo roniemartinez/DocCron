@@ -7,7 +7,8 @@
 # __status__ = "Development"
 
 import itertools
-from datetime import datetime, MAXYEAR
+from calendar import monthrange
+from datetime import datetime, MAXYEAR, timedelta
 
 MONTH_NAMES = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 WEEKDAY_NAMES = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
@@ -58,7 +59,7 @@ class Job(object):
                 else:
                     start, end = m.split('-', 1)
                     self.minutes += list(range(int(start), int(end) + 1))
-        self.minutes = self.minutes[::step]
+        self.minutes = sorted(self.minutes)[::step]
 
     def _parse_hour(self, hour):
         hours, step = _parse_steps(hour)
@@ -71,12 +72,16 @@ class Job(object):
                 else:
                     start, end = m.split('-', 1)
                     self.hours += list(range(int(start), int(end) + 1))
-        self.hours = self.hours[::step]
+        self.hours = sorted(self.hours)[::step]
 
     def _parse_day(self, day):
         days, step = _parse_steps(day)
         if days == '*':
             self.days = list(range(1, 32))
+        elif days == 'L':
+            self.days = [day]
+        elif days.endswith('W') and days[:-1].isdigit():
+            self.days = [days]
         else:
             for m in days.split(','):
                 if m.isdigit():
@@ -84,12 +89,16 @@ class Job(object):
                 else:
                     start, end = m.split('-', 1)
                     self.days += list(range(int(start), int(end) + 1))
-        self.days = self.days[::step]
+        self.days = sorted(self.days)[::step]
 
     def _parse_weekday(self, weekday):
         weekdays, step = _parse_steps(weekday)
         if weekdays == '*':
             self.weekdays = list(range(1, 8))
+        elif weekdays.endswith('L') and weekdays[:-1].isdigit():
+            self.weekdays = [weekdays]
+        elif '#' in weekdays and all(x.isdigit() for x in weekdays.split('#')):
+            self.weekdays = [weekdays]
         else:
             for w in weekdays.split(','):
                 if w.isdigit():
@@ -102,7 +111,7 @@ class Job(object):
                     start = start if start.isdigit() else WEEKDAY_NAMES.index(start.lower()) + 1
                     end = end if end.isdigit() else WEEKDAY_NAMES.index(end.lower()) + 1
                     self.weekdays += list(range(int(start), int(end) + 1))
-        self.weekdays = self.weekdays[::step]
+        self.weekdays = sorted(self.weekdays)[::step]
 
     def _parse_month(self, month):
         months, step = _parse_steps(month)
@@ -119,7 +128,7 @@ class Job(object):
                     start = start if start.isdigit() else MONTH_NAMES.index(start.lower()) + 1
                     end = end if end.isdigit() else MONTH_NAMES.index(end.lower()) + 1
                     self.months += list(range(int(start), int(end) + 1))
-        self.months = self.months[::step]
+        self.months = sorted(self.months)[::step]
 
     def _parse_year(self, year):
         years, step = _parse_steps(year)
@@ -132,7 +141,7 @@ class Job(object):
                 else:
                     start, end = m.split('-', 1)
                     self.years += list(range(int(start), int(end) + 1))
-        self.years = self.years[::step]
+        self.years = sorted(self.years)[::step]
 
     def __iter__(self):
         return self
@@ -140,11 +149,57 @@ class Job(object):
     def __next__(self):
         for i in self.iterator:
             try:
-                next_datetime = datetime(*i)
-                if next_datetime <= datetime.now():
-                    continue
-                if next_datetime.isoweekday() in self.weekdays:
-                    return next_datetime
+                try:
+                    next_datetime = datetime(*i)
+                    if next_datetime <= datetime.now():
+                        continue
+                    weekday = self.weekdays[0]
+                    if len(self.weekdays) == 1 and isinstance(weekday, str):
+                        if weekday[-1] == 'L' and next_datetime.isoweekday() == int(weekday[:-1]) \
+                                and (next_datetime + timedelta(days=7)).month != next_datetime.month:
+                            return next_datetime
+                        elif '#' in weekday:
+                            weekday, order = map(int, weekday.split('#'))
+                            weekday = 7 if weekday == 0 else weekday
+                            if next_datetime.isoweekday() != weekday:
+                                continue
+                            if next_datetime.month == (next_datetime - timedelta(days=7*(order-1))).month and \
+                                    next_datetime.month != (next_datetime - timedelta(days=7*order)).month:
+                                return next_datetime
+                            continue
+                    if next_datetime.isoweekday() in self.weekdays:
+                        return next_datetime
+                except TypeError:  # non-standard characters
+                    year, month, day, hour, minute = i
+                    if day == 'L':
+                        day = monthrange(year, month)[1]
+                        next_datetime = datetime(year, month, day, hour, minute)
+                    elif day[-1] == 'W':
+                        next_datetime = datetime(year, month, int(day[:-1]), hour, minute)
+                        if next_datetime <= datetime.now() or next_datetime.isoweekday() not in self.weekdays:
+                            continue
+                        if next_datetime.isoweekday() == 6:
+                            if next_datetime.day == 1:
+                                next_datetime += timedelta(days=2)
+                            elif (next_datetime - timedelta(days=1)) > datetime.now():
+                                next_datetime -= timedelta(days=1)
+                            else:
+                                continue
+                        elif next_datetime.isoweekday() in (0, 7):
+                            next_datetime += timedelta(days=1)
+                        return next_datetime
+                    else:
+                        continue
+                    if next_datetime <= datetime.now():
+                        continue
+
+                    weekday = self.weekdays[0]
+                    if len(self.weekdays) == 1 and isinstance(weekday, str):
+                        if weekday[-1] == 'L' and next_datetime.isoweekday() == int(weekday[:-1]) \
+                                and (next_datetime + timedelta(days=7)).month != next_datetime.month:
+                            return next_datetime
+                    if next_datetime.isoweekday() in self.weekdays:
+                        return next_datetime
             except ValueError:
                 continue
 

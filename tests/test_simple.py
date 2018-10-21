@@ -8,6 +8,7 @@
 from collections import Iterable
 from datetime import datetime, timedelta
 
+# noinspection PyPackageRequirements
 import pytest
 
 import doccron

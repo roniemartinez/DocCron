@@ -31,6 +31,8 @@ def _tokenize_by_percent(jobs):
             }[job]
         elif job.startswith('#'):
             continue
+        elif '?' in job:
+            job = job.replace('?', '*')
         yield job.split(None, 5)
 
 
