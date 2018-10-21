@@ -1,6 +1,6 @@
 from setuptools import setup
 
-VERSION = '0.3.0-rc1'
+VERSION = '0.3.0'
 
 setup(
     name='DocCron',
