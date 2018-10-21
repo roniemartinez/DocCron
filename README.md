@@ -1,6 +1,6 @@
 # DocCron
 
-Schedule with Docstring
+Schedule with Docstrings
 
 <table>
     <tr>
@@ -52,8 +52,6 @@ Run `hello()` at every 2nd minute and 3rd minute:
 ```python
 import time
 
-import doccron
-
 
 def hello():
     """
@@ -64,6 +62,7 @@ def hello():
 
 
 if __name__ == '__main__':
+    import doccron
     doccron.run_jobs()
 
 ```
@@ -71,7 +70,7 @@ if __name__ == '__main__':
 ## Todo
 
 - [x] Support [Nonstandard predefined scheduling definitions](https://en.wikipedia.org/wiki/Cron#Nonstandard_predefined_scheduling_definitions)
-- [ ] Support [Non-standard characters](https://en.wikipedia.org/wiki/Cron#Non-standard_characters)
+- [x] Support [Non-standard characters](https://en.wikipedia.org/wiki/Cron#Non-standard_characters)
 - [ ] Support [Quartz format](http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html)
 
 ## References

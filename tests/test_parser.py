@@ -13,6 +13,7 @@ def test_tokenizer():
     assert [['*'] * 5] == list(doccron.tokenize('* * * * *'))
     assert [['*'] * 6] == list(doccron.tokenize('* * * * * *'))
     assert [['*'] * 5] == list(doccron.tokenize('*  * * * *'))
+    assert [['*'] * 5, ['*'] * 6] == list(doccron.tokenize('* * * * *%* * * * * *'))
     assert [['*'] * 5, ['*'] * 6] == list(doccron.tokenize('* * * * *\n* * * * * *'))
     assert [['*'] * 5] * 2 == list(doccron.tokenize('''* * * * *
     * * * * *'''))
