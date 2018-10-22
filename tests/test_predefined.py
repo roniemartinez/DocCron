@@ -56,6 +56,14 @@ def test_daily():
         assert next(cron) == next_day
 
 
+def test_midnight():
+    cron = doccron.cron('@midnight')
+    next_day = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    for _ in range(3):
+        next_day += timedelta(days=1)
+        assert next(cron) == next_day
+
+
 def test_hourly():
     cron = doccron.cron('@hourly')
     next_hour = datetime.now().replace(minute=0, second=0, microsecond=0)

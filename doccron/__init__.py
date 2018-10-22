@@ -26,6 +26,7 @@ def _tokenize_by_percent(jobs):
                 '@monthly': '0 0 1 * *',
                 '@weekly': '0 0 * * 0',
                 '@daily': '0 0 * * *',
+                '@midnight': '0 0 * * *',
                 '@hourly': '0 * * * *',
                 '@reboot': _next_minute(),
             }[job]
