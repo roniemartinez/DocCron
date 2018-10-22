@@ -43,7 +43,7 @@ pip install DocCron
 
 ## Description
 
-Cron scheduler inspired by [doctest](https://en.wikipedia.org/wiki/Doctest)
+Cron-based scheduler inspired by [doctest](https://en.wikipedia.org/wiki/Doctest)
 
 ## Example
 
@@ -67,11 +67,13 @@ if __name__ == '__main__':
 
 ```
 
-## Todo
+## Features
 
-- [x] Support [Nonstandard predefined scheduling definitions](https://en.wikipedia.org/wiki/Cron#Nonstandard_predefined_scheduling_definitions)
-- [x] Support [Non-standard characters](https://en.wikipedia.org/wiki/Cron#Non-standard_characters)
-- [ ] Support [Quartz format](http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html)
+- [x] Standard and extended cron formats (see [CRON Expression](https://en.wikipedia.org/wiki/Cron#CRON_expression))
+- [x] [Nonstandard predefined scheduling definitions](https://en.wikipedia.org/wiki/Cron#Nonstandard_predefined_scheduling_definitions)
+- [x] [Non-standard characters](https://en.wikipedia.org/wiki/Cron#Non-standard_characters)
+- [ ] [Quartz format](http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html)
+- [ ] Human readable date/time strings 
 
 ## References
 

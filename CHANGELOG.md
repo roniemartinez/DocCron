@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [0.4.0] - 2018-10-22
+### Added
+- Support @midnight predefined schedule (#9)
+
+### Removed
+- Drop unused/untested code for 100% code coverage
+
 ## [0.3.0] - 2018-10-21
 ### Added
 - Support for comments (#) and percent separator (%)
@@ -20,7 +27,8 @@
 - Show example application
 - Add setup.py and deploy to PyPI
 
-[Unreleased]: https://github.com/Code-ReaQtor/DocCron/compare/0.3.0...master
+[Unreleased]: https://github.com/Code-ReaQtor/DocCron/compare/0.4.0...master
+[0.4.0]: https://github.com/Code-ReaQtor/DocCron/releases/tag/0.4.0
 [0.3.0]: https://github.com/Code-ReaQtor/DocCron/releases/tag/0.3.0
 [0.2.0]: https://github.com/Code-ReaQtor/DocCron/releases/tag/0.2.0
 [0.1.0]: https://github.com/Code-ReaQtor/DocCron/releases/tag/0.1.0
