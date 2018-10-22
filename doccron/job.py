@@ -174,6 +174,8 @@ class Job(object):
                     if day == 'L':
                         day = monthrange(year, month)[1]
                         next_datetime = datetime(year, month, day, hour, minute)
+                        if next_datetime > datetime.now() and next_datetime.isoweekday() in self.weekdays:
+                            return next_datetime
                     elif day[-1] == 'W':
                         next_datetime = datetime(year, month, int(day[:-1]), hour, minute)
                         if next_datetime <= datetime.now() or next_datetime.isoweekday() not in self.weekdays:
@@ -183,22 +185,8 @@ class Job(object):
                                 next_datetime += timedelta(days=2)
                             elif (next_datetime - timedelta(days=1)) > datetime.now():
                                 next_datetime -= timedelta(days=1)
-                            else:
-                                continue
                         elif next_datetime.isoweekday() in (0, 7):
                             next_datetime += timedelta(days=1)
-                        return next_datetime
-                    else:
-                        continue
-                    if next_datetime <= datetime.now():
-                        continue
-
-                    weekday = self.weekdays[0]
-                    if len(self.weekdays) == 1 and isinstance(weekday, str):
-                        if weekday[-1] == 'L' and next_datetime.isoweekday() == int(weekday[:-1]) \
-                                and (next_datetime + timedelta(days=7)).month != next_datetime.month:
-                            return next_datetime
-                    if next_datetime.isoweekday() in self.weekdays:
                         return next_datetime
             except ValueError:
                 continue
