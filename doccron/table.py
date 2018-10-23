@@ -15,12 +15,12 @@ class InvalidSchedule(Exception):
 class CronTable(object):
 
     # noinspection PyShadowingNames
-    def __init__(self, jobs):
+    def __init__(self, jobs, quartz=False):
         self._jobs = {}
         self._previous_schedule = None
         for j in jobs:
             try:
-                job = Job(j)
+                job = Job(j, quartz=quartz)
             except ValueError:
                 raise InvalidSchedule
             self._jobs[job] = next(job)

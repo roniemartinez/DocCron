@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [1.0.0] - 2018-10-23
+### Added
+- Support for Quartz format by adding seconds column (#4)
+
 ## [0.4.1] - 2018-10-23
 ### Fixed
 - Bump version to fix failed builds on Travis CI and AppVeyor due to October 21 Github issue
@@ -31,7 +35,8 @@
 - Show example application
 - Add setup.py and deploy to PyPI
 
-[Unreleased]: https://github.com/Code-ReaQtor/DocCron/compare/0.4.1...master
+[Unreleased]: https://github.com/Code-ReaQtor/DocCron/compare/1.0.0...master
+[1.0.0]: https://github.com/Code-ReaQtor/DocCron/releases/tag/1.0.0
 [0.4.1]: https://github.com/Code-ReaQtor/DocCron/releases/tag/0.4.1
 [0.4.0]: https://github.com/Code-ReaQtor/DocCron/releases/tag/0.4.0
 [0.3.0]: https://github.com/Code-ReaQtor/DocCron/releases/tag/0.3.0

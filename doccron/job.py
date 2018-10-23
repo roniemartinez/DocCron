@@ -24,7 +24,8 @@ def _parse_steps(item):
 
 class Job(object):
 
-    def __init__(self, jobs):
+    def __init__(self, jobs, quartz=False):
+        self.seconds = [] if quartz else [0]
         self.minutes = []
         self.hours = []
         self.days = []
@@ -32,13 +33,19 @@ class Job(object):
         self.months = []
         self.years = []
         try:
-            minute, hour, day, month, weekday, year = jobs
+            if quartz:
+                second, minute, hour, day, month, weekday, year = jobs
+            else:
+                minute, hour, day, month, weekday, year = jobs
         except ValueError:
-            minute, hour, day, month, weekday = jobs
+            if quartz:
+                second, minute, hour, day, month, weekday = jobs
+            else:
+                minute, hour, day, month, weekday = jobs
             year = '*'
 
-        self.base_datetime = datetime.now().replace(second=0, microsecond=0)
-
+        if quartz:
+            self._parse_second(second)
         self._parse_minute(minute)
         self._parse_hour(hour)
         self._parse_day(day)
@@ -46,7 +53,20 @@ class Job(object):
         self._parse_weekday(weekday)
         self._parse_year(year)
 
-        self.iterator = itertools.product(self.years, self.months, self.days, self.hours, self.minutes)
+        self.iterator = itertools.product(self.years, self.months, self.days, self.hours, self.minutes, self.seconds)
+
+    def _parse_second(self, second):
+        seconds, step = _parse_steps(second)
+        if seconds == '*':
+            self.seconds = list(range(0, 60))
+        else:
+            for m in seconds.split(','):
+                if m.isdigit():
+                    self.seconds.append(int(m))
+                else:
+                    start, end = m.split('-', 1)
+                    self.seconds += list(range(int(start), int(end) + 1))
+        self.seconds = sorted(self.seconds)[::step]
 
     def _parse_minute(self, minute):
         minutes, step = _parse_steps(minute)
@@ -133,7 +153,7 @@ class Job(object):
     def _parse_year(self, year):
         years, step = _parse_steps(year)
         if years == '*':
-            self.years = list(range(self.base_datetime.year, MAXYEAR))
+            self.years = list(range(datetime.now().year, MAXYEAR))
         else:
             for m in years.split(','):
                 if m.isdigit():
@@ -147,7 +167,11 @@ class Job(object):
         return self
 
     def __next__(self):
+        # TODO: speed-up iteration
+        current_time_tuple = tuple(datetime.now().timetuple())[:6]
         for i in self.iterator:
+            if i < current_time_tuple:
+                continue
             try:
                 try:
                     next_datetime = datetime(*i)
@@ -170,14 +194,14 @@ class Job(object):
                     if next_datetime.isoweekday() in self.weekdays:
                         return next_datetime
                 except TypeError:  # non-standard characters
-                    year, month, day, hour, minute = i
+                    year, month, day, hour, minute, second = i
                     if day == 'L':
                         day = monthrange(year, month)[1]
-                        next_datetime = datetime(year, month, day, hour, minute)
+                        next_datetime = datetime(year, month, day, hour, minute, second)
                         if next_datetime > datetime.now() and next_datetime.isoweekday() in self.weekdays:
                             return next_datetime
                     elif day[-1] == 'W':
-                        next_datetime = datetime(year, month, int(day[:-1]), hour, minute)
+                        next_datetime = datetime(year, month, int(day[:-1]), hour, minute, second)
                         if next_datetime <= datetime.now() or next_datetime.isoweekday() not in self.weekdays:
                             continue
                         if next_datetime.isoweekday() == 6:

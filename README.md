@@ -47,6 +47,8 @@ Cron-based scheduler inspired by [doctest](https://en.wikipedia.org/wiki/Doctest
 
 ## Example
 
+### Standard/Extended Format
+
 Run `hello()` at every 2nd minute and 3rd minute:
 
 ```python
@@ -67,13 +69,42 @@ if __name__ == '__main__':
 
 ```
 
+### Quartz Format
+
+Run `hello()` at every 2nd second and 3rd second:
+
+```python
+import time
+
+
+def hello():
+    """
+    */2 * * * * *
+    */3 * * * * *
+    """
+    print(time.strftime('%Y-%m-%d %H:%M:%S'), "hello world")
+
+
+if __name__ == '__main__':
+    import doccron
+    doccron.run_jobs(quartz=True)
+
+```
+
 ## Features
 
 - [x] Standard and extended cron formats (see [CRON Expression](https://en.wikipedia.org/wiki/Cron#CRON_expression))
 - [x] [Nonstandard predefined scheduling definitions](https://en.wikipedia.org/wiki/Cron#Nonstandard_predefined_scheduling_definitions)
 - [x] [Non-standard characters](https://en.wikipedia.org/wiki/Cron#Non-standard_characters)
-- [ ] [Quartz format](http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html)
+- [x] [Quartz format](http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html)
 - [ ] Human readable date/time strings 
+
+## Open to ideas!
+
+This is just a rough implementation of the concept! There are things that might need attention in the future:
+
+- Mixing cron syntax with docstrings equivalent to what doctest is using (>>>))
+- Timezone-awareness
 
 ## References
 
