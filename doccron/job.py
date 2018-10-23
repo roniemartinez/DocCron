@@ -170,8 +170,11 @@ class Job(object):
         # TODO: speed-up iteration
         current_time_tuple = tuple(datetime.now().timetuple())[:6]
         for i in self.iterator:
-            if i < current_time_tuple:
-                continue
+            try:
+                if i < current_time_tuple:
+                    continue
+            except TypeError:
+                pass
             try:
                 try:
                     next_datetime = datetime(*i)
