@@ -34,12 +34,16 @@ def _tokenize_by_percent(jobs):
             continue
         elif '?' in job:
             job = job.replace('?', '*')
-        yield job.split(None, 5)
+        yield job.split(None, 6)
 
 
-def tokenize(jobs):
+def tokenize(jobs, quartz=False):
     for job in jobs.splitlines():  # type: str
         for tokens in _tokenize_by_percent(job.strip()):
+            length = len(tokens)
+            tokens += ['*'] * (6 - length)
+            if quartz:
+                tokens += ['*'] * (7 - length)
             yield tokens
 
 
@@ -49,8 +53,12 @@ def _next_minute():
                                      next_minute.year)
 
 
-def cron(jobs):
-    return CronTable(tokenize(jobs))
+def cron(jobs, quartz=False):
+    return CronTable(tokenize(jobs), quartz=quartz)
+
+
+def cron_quartz(jobs):
+    return cron(jobs, quartz=True)
 
 
 # noinspection PyShadowingNames
@@ -66,7 +74,7 @@ def _job_iter(job_function_map):
         job_map[job] = next(job)
 
 
-def run_jobs(simulate=False):
+def run_jobs(quartz=False, simulate=False):
     job_function_map = {}
     logger.info("Searching jobs")
     for function_object in inspect.currentframe().f_back.f_globals.values():
@@ -75,7 +83,7 @@ def run_jobs(simulate=False):
             if docstring and isinstance(docstring, str):
                 docstring = docstring.strip()
                 if len(docstring):
-                    job_function_map[cron(docstring)] = function_object
+                    job_function_map[cron(docstring, quartz=quartz)] = function_object
     if simulate:
         logger.info('Simulation started')
         return _job_iter(job_function_map)
@@ -98,7 +106,7 @@ def _run_jobs(job_function_map):  # pragma: no cover
                     thread = threading.Timer(interval.total_seconds(), function_object)  # type: threading.Thread
                     threads[thread_count - 1] = thread
                     logger.info("Scheduling function '%s' to run at %s", function_object.__name__,
-                                next_schedule.strftime('%Y-%m-%d %H:%M'))
+                                next_schedule.strftime('%Y-%m-%d %H:%M:%S'))
                     thread.start()
                     break
                 thread_count = len(job_function_map) if thread_count == 1 else thread_count - 1
@@ -109,7 +117,7 @@ def _run_jobs(job_function_map):  # pragma: no cover
             threads.append(thread)
             thread.start()
             logger.info("Scheduling function '%s' to run at %s", function_object.__name__,
-                        next_schedule.strftime('%Y-%m-%d %H:%M'))
+                        next_schedule.strftime('%Y-%m-%d %H:%M:%S'))
     if len(threads):
         for thread in threads:
             thread.join()
