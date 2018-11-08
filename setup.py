@@ -1,6 +1,6 @@
 from setuptools import setup
 
-VERSION = '1.0.0'
+VERSION = '1.1.0'
 
 setup(
     name='DocCron',
@@ -15,7 +15,7 @@ setup(
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     keywords=[],
-    classifiers=['Development Status :: 3 - Alpha',
+    classifiers=['Development Status :: 4 - Beta',
                  'License :: OSI Approved :: MIT License',
                  'Topic :: Software Development :: Libraries :: Python Modules',
                  'Programming Language :: Python :: 2',

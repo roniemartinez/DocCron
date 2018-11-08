@@ -41,9 +41,10 @@ def tokenize(jobs, quartz=False):
     for job in jobs.splitlines():  # type: str
         for tokens in _tokenize_by_percent(job.strip()):
             length = len(tokens)
-            tokens += ['*'] * (6 - length)
             if quartz:
                 tokens += ['*'] * (7 - length)
+            else:
+                tokens += ['*'] * (6 - length)
             yield tokens
 
 
