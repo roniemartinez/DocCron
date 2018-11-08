@@ -33,7 +33,6 @@ def test_last_day_of_week_of_month():
     for _ in range(3):
         while last_friday.month == (last_friday + timedelta(days=7)).month:
             last_friday += timedelta(days=7)
-        print(last_friday)
         assert next(cron) == last_friday
         last_friday += timedelta(days=7)
 

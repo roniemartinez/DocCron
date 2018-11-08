@@ -5,7 +5,7 @@
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 # __status__ = "Production"
-from collections import Iterable
+from collections import Iterator
 from datetime import datetime, timedelta
 
 import doccron
@@ -14,12 +14,12 @@ from doccron.job import Job
 
 def test_iter_cron_table():
     cron = iter(doccron.cron_quartz('* * * * * *'))
-    assert isinstance(cron, Iterable)
+    assert isinstance(cron, Iterator)
 
 
 def test_iter_job():
     job = iter(Job(['*'] * 6, quartz=True))
-    assert isinstance(job, Iterable)
+    assert isinstance(job, Iterator)
 
 
 def test_not_repeated():
@@ -31,7 +31,7 @@ def test_not_repeated():
 
 def test_schedule_per_second():
     cron = doccron.cron_quartz('* * * * * *')
-    assert isinstance(cron, Iterable)
+    assert isinstance(cron, Iterator)
 
     next_schedule = next(cron)
     assert next_schedule > datetime.now().replace(microsecond=0)
@@ -40,6 +40,34 @@ def test_schedule_per_second():
         n = next(cron)
         assert isinstance(n, datetime)
         assert next_schedule + timedelta(seconds=1) == n
+        next_schedule = n
+
+
+def test_schedule_per_second_list():
+    cron = doccron.cron_quartz('0,10,20,30,40,50 * * * * * *')
+    assert isinstance(cron, Iterator)
+
+    next_schedule = next(cron)
+    assert next_schedule > datetime.now().replace(microsecond=0)
+    assert isinstance(next_schedule, datetime)
+    for i in range(0, 60, 10):
+        n = next(cron)
+        assert isinstance(n, datetime)
+        assert next_schedule + timedelta(seconds=10) == n
+        next_schedule = n
+
+
+def test_schedule_per_second_range_step():
+    cron = doccron.cron_quartz('0-59/10 * * * * * *')
+    assert isinstance(cron, Iterator)
+
+    next_schedule = next(cron)
+    assert next_schedule > datetime.now().replace(microsecond=0)
+    assert isinstance(next_schedule, datetime)
+    for i in range(0, 60, 10):
+        n = next(cron)
+        assert isinstance(n, datetime)
+        assert next_schedule + timedelta(seconds=10) == n
         next_schedule = n
 
 

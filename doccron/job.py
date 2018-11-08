@@ -22,6 +22,23 @@ def _parse_steps(item):
         return item, 1
 
 
+def _odometer(odometer, seconds):
+    current_time_tuple = tuple(datetime.now().timetuple())[:6]
+    for i in odometer:
+        try:
+            if i < current_time_tuple[:5]:
+                continue
+        except TypeError:
+            pass
+        for second in seconds:
+            try:
+                if i + (second,) < current_time_tuple:
+                    continue
+            except TypeError:
+                pass
+            yield i + (second,)
+
+
 class Job(object):
 
     def __init__(self, jobs, quartz=False):
@@ -32,19 +49,21 @@ class Job(object):
         self.weekdays = []
         self.months = []
         self.years = []
+        self._quartz = quartz
         try:
-            if quartz:
+            if self._quartz:
                 second, minute, hour, day, month, weekday, year = jobs
             else:
                 minute, hour, day, month, weekday, year = jobs
         except ValueError:
-            if quartz:
+            if self._quartz:
                 second, minute, hour, day, month, weekday = jobs
             else:
                 minute, hour, day, month, weekday = jobs
             year = '*'
 
-        if quartz:
+        if self._quartz:
+            # noinspection PyUnboundLocalVariable
             self._parse_second(second)
         self._parse_minute(minute)
         self._parse_hour(hour)
@@ -53,7 +72,8 @@ class Job(object):
         self._parse_weekday(weekday)
         self._parse_year(year)
 
-        self.iterator = itertools.product(self.years, self.months, self.days, self.hours, self.minutes, self.seconds)
+        self.iterator = _odometer(itertools.product(self.years, self.months, self.days, self.hours, self.minutes),
+                                  self.seconds)
 
     def _parse_second(self, second):
         seconds, step = _parse_steps(second)
@@ -167,14 +187,7 @@ class Job(object):
         return self
 
     def __next__(self):
-        # TODO: speed-up iteration
-        current_time_tuple = tuple(datetime.now().timetuple())[:6]
         for i in self.iterator:
-            try:
-                if i < current_time_tuple:
-                    continue
-            except TypeError:
-                pass
             try:
                 try:
                     next_datetime = datetime(*i)
