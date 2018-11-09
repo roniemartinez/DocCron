@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [1.1.1] - 2018-11-09
+### Changed
+- Add downloads shield
+
 ## [1.1.0] - 2018-11-08
 ### Added
 - Fast skipping in datetime odometer (#17)
