@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [1.1.1] - 2018-11-09
+### Changed
+- Add downloads shield
+
 ## [1.1.0] - 2018-11-08
 ### Added
 - Fast skipping in datetime odometer (#17)
@@ -39,7 +43,8 @@
 - Show example application
 - Add setup.py and deploy to PyPI
 
-[Unreleased]: https://github.com/Code-ReaQtor/DocCron/compare/1.1.0...master
+[Unreleased]: https://github.com/Code-ReaQtor/DocCron/compare/1.1.1...master
+[1.1.1]: https://github.com/Code-ReaQtor/DocCron/releases/tag/1.1.1
 [1.1.0]: https://github.com/Code-ReaQtor/DocCron/releases/tag/1.1.0
 [1.0.0]: https://github.com/Code-ReaQtor/DocCron/releases/tag/1.0.0
 [0.4.1]: https://github.com/Code-ReaQtor/DocCron/releases/tag/0.4.1

@@ -30,6 +30,10 @@ Schedule with Docstrings
     <tr>
         <td>Status</td>
         <td><img src='https://img.shields.io/pypi/status/DocCron.svg'></td>
+        <td>Downloads</td>
+        <td><img src='https://img.shields.io/pypi/dm/DocCron.svg'></td>
+    </tr>
+    <tr>
         <td>Show your support</td>
         <td><a href='https://saythanks.io/to/Code-ReaQtor'><img src='https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg'></a></td>
     </tr>
