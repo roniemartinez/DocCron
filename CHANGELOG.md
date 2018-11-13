@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [1.2.0] - 2018-11-13
+### Added
+- Embed into `/etc/crontab::` literal blocks (#20)
+
 ## [1.1.2] - 2018-11-13
 ### Fixed
 - Remove DeprecationWarning for collections module (#21)
@@ -47,7 +51,8 @@
 - Show example application
 - Add setup.py and deploy to PyPI
 
-[Unreleased]: https://github.com/Code-ReaQtor/DocCron/compare/1.1.2...master
+[Unreleased]: https://github.com/Code-ReaQtor/DocCron/compare/1.2.0...master
+[1.2.0]: https://github.com/Code-ReaQtor/DocCron/releases/tag/1.2.0
 [1.1.2]: https://github.com/Code-ReaQtor/DocCron/releases/tag/1.1.2
 [1.1.1]: https://github.com/Code-ReaQtor/DocCron/releases/tag/1.1.1
 [1.1.0]: https://github.com/Code-ReaQtor/DocCron/releases/tag/1.1.0

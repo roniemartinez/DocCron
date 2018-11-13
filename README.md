@@ -51,6 +51,8 @@ Cron-based scheduler inspired by [doctest](https://en.wikipedia.org/wiki/Doctest
 
 ## Example
 
+Cron jobs can be embedded into docstrings by using a [literal block](http://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#literal-blocks) (`::`). Literal blocks should start with `/etc/crontab`.
+
 ### Standard/Extended Format
 
 Run `hello()` at every 2nd minute and 3rd minute:
@@ -61,8 +63,12 @@ import time
 
 def hello():
     """
-    */2 * * * *
-    */3 * * * *
+    Print "hello world" at every 2nd minute and 3rd minute:
+
+    /etc/crontab::
+
+        */2 * * * *
+        */3 * * * *
     """
     print(time.strftime('%Y-%m-%d %H:%M:%S'), "hello world")
 
@@ -83,8 +89,12 @@ import time
 
 def hello():
     """
-    */2 * * * * *
-    */3 * * * * *
+    Print "hello world" every 2nd second and 3rd second:
+
+    /etc/crontab::
+
+        */2 * * * * *
+        */3 * * * * *
     """
     print(time.strftime('%Y-%m-%d %H:%M:%S'), "hello world")
 
@@ -97,17 +107,15 @@ if __name__ == '__main__':
 
 ## Features
 
-- [x] Standard and extended cron formats (see [CRON Expression](https://en.wikipedia.org/wiki/Cron#CRON_expression))
-- [x] [Nonstandard predefined scheduling definitions](https://en.wikipedia.org/wiki/Cron#Nonstandard_predefined_scheduling_definitions)
-- [x] [Non-standard characters](https://en.wikipedia.org/wiki/Cron#Non-standard_characters)
-- [x] [Quartz format](http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html)
-- [ ] Human readable date/time strings 
+- Standard and extended cron formats (see [CRON Expression](https://en.wikipedia.org/wiki/Cron#CRON_expression))
+- [Nonstandard predefined scheduling definitions](https://en.wikipedia.org/wiki/Cron#Nonstandard_predefined_scheduling_definitions)
+- [Non-standard characters](https://en.wikipedia.org/wiki/Cron#Non-standard_characters)
+- [Quartz format](http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html)
+- Works with documentation tools like [Sphinx](https://github.com/sphinx-doc/sphinx)
 
-## Open to ideas!
+## TODO
 
-This is just a rough implementation of the concept! There are things that might need attention in the future:
-
-- Mixing cron syntax with docstrings equivalent to what doctest is using (>>>))
+- Human readable date/time strings 
 - Timezone-awareness
 
 ## References
