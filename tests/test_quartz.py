@@ -5,7 +5,10 @@
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 # __status__ = "Production"
-from collections import Iterator
+try:
+    from collections.abc import Iterator
+except ImportError:
+    from collections import Iterator
 from datetime import datetime, timedelta
 
 import doccron
