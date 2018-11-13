@@ -76,17 +76,22 @@ def test_schedule_per_second_range_step():
 
 def foo():
     """
-    * * * * * * 2021
-    * * * * * * 2020
+    /etc/crontab::
+
+        * * * * * * 2021
+        * * * * * * 2020
     """
     print("foo")
 
 
 def test_find_functions_with_docstrings():
     run_count = 0
+    jobs_found = False
     for next_schedule, function_object in doccron.run_jobs(quartz=True, simulate=True):
         assert isinstance(next_schedule, datetime)
         assert function_object.__name__ == 'foo'
+        jobs_found = True
         run_count += 1
         if run_count == 5:
             break
+    assert jobs_found

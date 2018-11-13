@@ -38,7 +38,9 @@ def _tokenize_by_percent(jobs):
 
 
 def tokenize(jobs, quartz=False):
-    for job in jobs.splitlines():  # type: str
+    if isinstance(jobs, str):
+        jobs = jobs.splitlines()
+    for job in jobs:  # type: str
         for tokens in _tokenize_by_percent(job.strip()):
             length = len(tokens)
             if quartz:
@@ -46,6 +48,31 @@ def tokenize(jobs, quartz=False):
             else:
                 tokens += ['*'] * (6 - length)
             yield tokens
+
+
+def parse_schedules(docstring):
+    lines = iter(docstring.splitlines())
+    schedules = {'cron': []}
+    for line in lines:
+        if line.strip() == '/etc/crontab::':
+            leading_whitespaces = len(line) - len(line.lstrip())
+            assert len(next(lines).strip()) == 0
+            indented = None
+            while True:
+                try:
+                    line = next(lines)
+                    schedule = line.strip()
+                    if indented is None:
+                        indented = len(line) - len(line.lstrip()) > leading_whitespaces
+                    if indented and len(line) - len(line.lstrip()) <= leading_whitespaces:
+                        break
+                    if len(schedule) and schedule[0] not in ':@':
+                        schedules['cron'].append(schedule)
+                    else:
+                        break
+                except StopIteration:
+                    break
+    return schedules
 
 
 def _next_minute():
@@ -68,10 +95,11 @@ def _job_iter(job_function_map):
     for job in job_function_map.keys():
         job_map[job] = next(job)
     while True:
-        if not len(job_map):
-            return
         job, next_schedule = sorted(job_map.items(), key=lambda x: x[1])[0]
-        yield next_schedule, job_function_map[job]
+        if next_schedule:
+            yield next_schedule, job_function_map[job]
+        else:
+            break
         job_map[job] = next(job)
 
 
@@ -84,7 +112,10 @@ def run_jobs(quartz=False, simulate=False):
             if docstring and isinstance(docstring, str):
                 docstring = docstring.strip()
                 if len(docstring):
-                    job_function_map[cron(docstring, quartz=quartz)] = function_object
+                    schedules = parse_schedules(docstring)
+                    cron_schedules = schedules['cron']
+                    if len(cron_schedules):
+                        job_function_map[cron(cron_schedules, quartz=quartz)] = function_object
     if simulate:
         logger.info('Simulation started')
         return _job_iter(job_function_map)
