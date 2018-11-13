@@ -5,7 +5,10 @@
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 # __status__ = "Development"
-from collections import Iterable
+try:
+    from collections.abc import Iterator
+except ImportError:
+    from collections import Iterator
 from datetime import datetime, timedelta
 
 # noinspection PyPackageRequirements
@@ -28,12 +31,12 @@ def test_invalid_strings():
 
 def test_iter_cron_table():
     cron = iter(doccron.cron('* * * * *'))
-    assert isinstance(cron, Iterable)
+    assert isinstance(cron, Iterator)
 
 
 def test_iter_job():
     job = iter(Job(['*'] * 5))
-    assert isinstance(job, Iterable)
+    assert isinstance(job, Iterator)
 
 
 def test_not_repeated():
@@ -46,7 +49,7 @@ def test_not_repeated():
 def test_schedule_per_minute():
     current_datetime = datetime.now().replace(second=0, microsecond=0)
     cron = doccron.cron('* * * * *')
-    assert isinstance(cron, Iterable)
+    assert isinstance(cron, Iterator)
 
     for i in range(1, 6):
         # noinspection PyTypeChecker
