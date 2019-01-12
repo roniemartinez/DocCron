@@ -14,6 +14,10 @@ matrix:
     dist: xenial
     sudo: true
 
+branches:
+  except:
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+
 install:
   - pip install -r test-requirements.txt
 
@@ -30,4 +34,4 @@ deploy:
   distributions: "sdist bdist_wheel"
   on:
     branch: master
-    condition: $TRAVIS_PYTHON_VERSION = "3.6" AND tag IS NONE
+    condition: $TRAVIS_PYTHON_VERSION = "3.6"
