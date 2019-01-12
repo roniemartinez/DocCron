@@ -1,13 +1,13 @@
 from setuptools import setup
 
-VERSION = '1.2.0'
+VERSION = '1.2.1'
 
 setup(
     name='DocCron',
     version=VERSION,
     packages=['doccron'],
-    url='https://github.com/Code-ReaQtor/DocCron',
-    download_url='https://github.com/Code-ReaQtor/DocCron/tarball/{}'.format(VERSION),
+    url='https://github.com/roniemartinez/DocCron',
+    download_url='https://github.com/roniemartinez/DocCron/tarball/{}'.format(VERSION),
     license='MIT',
     author='Ronie Martinez',
     author_email='ronmarti18@gmail.com',

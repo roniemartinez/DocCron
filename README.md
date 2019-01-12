@@ -11,9 +11,9 @@ Schedule with Docstrings
     </tr>
     <tr>
         <td>Travis CI</td>
-        <td><img src='https://travis-ci.org/Code-ReaQtor/DocCron.svg?branch=master'></td>
+        <td><img src='https://travis-ci.org/roniemartinez/DocCron.svg?branch=master'></td>
         <td>Coverage</td>
-        <td><img src='https://codecov.io/gh/Code-ReaQtor/DocCron/branch/master/graph/badge.svg'></td>
+        <td><img src='https://codecov.io/gh/roniemartinez/DocCron/branch/master/graph/badge.svg'></td>
     </tr>
     <tr>
         <td>AppVeyor</td>
@@ -35,7 +35,7 @@ Schedule with Docstrings
     </tr>
     <tr>
         <td>Show your support</td>
-        <td><a href='https://saythanks.io/to/Code-ReaQtor'><img src='https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg'></a></td>
+        <td><a href='https://saythanks.io/to/roniemartinez'><img src='https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg'></a></td>
     </tr>
 </table>
 

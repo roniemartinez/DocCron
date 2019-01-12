@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018, Ronie Martinez"
+# __copyright__ = "Copyright 2018-2019, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
-# __status__ = "Production"
 from calendar import monthrange
 from datetime import datetime, timedelta
 
@@ -13,16 +12,18 @@ import doccron
 
 def test_question_mark():
     current_year = datetime.now().year
-    cron = doccron.cron('45 17 7 6 ? {},{}'.format(current_year+1, current_year+2))
-    assert next(cron) == datetime(current_year+1, 6, 7, 17, 45)
-    assert next(cron) == datetime(current_year+2, 6, 7, 17, 45)
+    cron = doccron.cron('45 17 7 6 ? {},{}'.format(current_year + 1, current_year + 2))
+    assert next(cron) == datetime(current_year + 1, 6, 7, 17, 45)
+    assert next(cron) == datetime(current_year + 2, 6, 7, 17, 45)
 
 
 def test_last_day_of_month():
-    current_year = datetime.now().year
+    now = datetime.now()
+    first_year = now.year if now < datetime(now.year, 6, 30) else now.year + 1
     cron = doccron.cron('* * L 6 ? *')
-    assert next(cron) == datetime(current_year+1, 6, 30, 0, 0)
-    assert next(cron) == datetime(current_year+1, 6, 30, 0, 1)
+
+    assert next(cron) == datetime(first_year, 6, 30, 0, 0)
+    assert next(cron) == datetime(first_year, 6, 30, 0, 1)
 
 
 def test_last_day_of_week_of_month():
