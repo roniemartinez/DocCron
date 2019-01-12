@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 # __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018, Ronie Martinez"
+# __copyright__ = "Copyright 2018-2019, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
-# __status__ = "Development"
-
 import itertools
 from calendar import monthrange
 from datetime import datetime, MAXYEAR, timedelta
@@ -28,13 +26,13 @@ def _odometer(odometer, seconds):
         try:
             if i < current_time_tuple[:5]:
                 continue
-        except TypeError:
+        except TypeError:  # pragma: no cover
             pass
         for second in seconds:
             try:
                 if i + (second,) < current_time_tuple:
                     continue
-            except TypeError:
+            except TypeError:  # pragma: no cover
                 pass
             yield i + (second,)
 
@@ -203,8 +201,8 @@ class Job(object):
                             weekday = 7 if weekday == 0 else weekday
                             if next_datetime.isoweekday() != weekday:
                                 continue
-                            if next_datetime.month == (next_datetime - timedelta(days=7*(order-1))).month and \
-                                    next_datetime.month != (next_datetime - timedelta(days=7*order)).month:
+                            if next_datetime.month == (next_datetime - timedelta(days=7 * (order - 1))).month and \
+                                    next_datetime.month != (next_datetime - timedelta(days=7 * order)).month:
                                 return next_datetime
                             continue
                     if next_datetime.isoweekday() in self.weekdays:
