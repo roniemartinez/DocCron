@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 1.3.1 - 2019-04-03
+### Added
+- Include examples (#28)
+- Include doccron/timezone.py to MANIFEST (#28)
+
 ## 1.3.0 - 2019-04-03
 ### Added
 - Timezone-awareness (#24)
