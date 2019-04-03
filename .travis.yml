@@ -22,10 +22,10 @@ install:
   - pipenv install --dev --skip-lock
 
 script:
-  pytest --cov=doccron --cov-report=xml -v
+  pipenv run pytest --cov=doccron --cov-report=xml -v
 
 after_success:
-  codecov
+  pipenv run codecov
 
 deploy:
   provider: pypi
