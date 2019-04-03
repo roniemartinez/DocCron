@@ -4,25 +4,25 @@
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
-import logging
-import sys
 import time
 
 import doccron
 
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format='%(asctime)s\t%(name)s\t%(levelname)s\t%(message)s')
-
 
 def foo():
     """
-    * * * * *
+    /etc/crontab::
+
+        * * * * *
     """
     print(time.strftime('%Y-%m-%d %H:%M:%S'), "foo")
 
 
 def bar():
     """
-    * * * * *
+    /etc/crontab::
+
+        * * * * *
     """
     print(time.strftime('%Y-%m-%d %H:%M:%S'), "bar")
 
