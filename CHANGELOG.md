@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 1.3.0 - 2019-04-03
+### Added
+- Timezone-awareness (#24)
+
+### Removed
+- Drop Python 3.4 support
+
 ## 1.2.1 - 2019-01-12
 ### Changed
 - Updated copyright
