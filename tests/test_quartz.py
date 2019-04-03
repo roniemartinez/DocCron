@@ -4,6 +4,8 @@
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
+from tzlocal import get_localzone
+
 try:
     from collections.abc import Iterator
 except ImportError:
@@ -36,7 +38,7 @@ def test_schedule_per_second():
     assert isinstance(cron, Iterator)
 
     next_schedule = next(cron)
-    assert next_schedule > datetime.now().replace(microsecond=0)
+    assert next_schedule > datetime.now(tz=get_localzone()).replace(microsecond=0)
     assert isinstance(next_schedule, datetime)
     for i in range(10):
         n = next(cron)
@@ -50,7 +52,7 @@ def test_schedule_per_second_list():
     assert isinstance(cron, Iterator)
 
     next_schedule = next(cron)
-    assert next_schedule > datetime.now().replace(microsecond=0)
+    assert next_schedule > datetime.now(tz=get_localzone()).replace(microsecond=0)
     assert isinstance(next_schedule, datetime)
     for i in range(0, 60, 10):
         n = next(cron)
@@ -64,7 +66,7 @@ def test_schedule_per_second_range_step():
     assert isinstance(cron, Iterator)
 
     next_schedule = next(cron)
-    assert next_schedule > datetime.now().replace(microsecond=0)
+    assert next_schedule > datetime.now(tz=get_localzone()).replace(microsecond=0)
     assert isinstance(next_schedule, datetime)
     for i in range(0, 60, 10):
         n = next(cron)

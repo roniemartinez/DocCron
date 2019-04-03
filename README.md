@@ -105,6 +105,34 @@ if __name__ == '__main__':
 
 ```
 
+### Timezone-Awareness (CRON_TZ)
+
+DocCron now support `CRON_TZ`. The value of `CRON_TZ` only applies to succeeding cron jobs.
+DocCron supports multiple `CRON_TZ` in a cron table. The default timezone value is the local/system timezone, if not specified. 
+
+```python
+import time
+
+
+def hello():
+    """
+    Print "hello world" at every 2nd minute and 3rd minute:
+
+    /etc/crontab::
+    
+        CRON_TZ=UTC
+        */2 * * * *
+        */3 * * * *
+    """
+    print(time.strftime('%Y-%m-%d %H:%M:%S%z'), "hello world")
+
+
+if __name__ == '__main__':
+    import doccron
+    doccron.run_jobs()
+
+```
+
 ## Features
 
 - Standard and extended cron formats (see [CRON Expression](https://en.wikipedia.org/wiki/Cron#CRON_expression))
@@ -112,11 +140,11 @@ if __name__ == '__main__':
 - [Non-standard characters](https://en.wikipedia.org/wiki/Cron#Non-standard_characters)
 - [Quartz format](http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html)
 - Works with documentation tools like [Sphinx](https://github.com/sphinx-doc/sphinx)
+- Timezone-awareness (CRON_TZ)
 
 ## TODO
 
 - Human readable date/time strings 
-- Timezone-awareness
 
 ## References
 

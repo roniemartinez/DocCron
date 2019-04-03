@@ -10,7 +10,11 @@ import threading
 import time
 from datetime import datetime, timedelta
 
+import pytz
+from tzlocal import get_localzone
+
 from doccron.table import CronTable
+from doccron.timezone import localize
 
 logger = logging.getLogger('doccron')
 
@@ -40,7 +44,11 @@ def tokenize(jobs, quartz=False):
     if isinstance(jobs, str):
         jobs = jobs.splitlines()
     for job in jobs:  # type: str
-        for tokens in _tokenize_by_percent(job.strip()):
+        job = job.strip()
+        if job.startswith('CRON_TZ'):
+            yield pytz.timezone(job.split('=', 2)[1].strip())
+            continue
+        for tokens in _tokenize_by_percent(job):
             length = len(tokens)
             if quartz:
                 tokens += ['*'] * (7 - length)
@@ -75,7 +83,7 @@ def parse_schedules(docstring):
 
 
 def _next_minute():
-    next_minute = (datetime.now().replace(second=0, microsecond=0) + timedelta(minutes=1))
+    next_minute = (datetime.now(tz=get_localzone()).replace(second=0, microsecond=0) + timedelta(minutes=1))
     return '{} {} {} {} * {}'.format(next_minute.minute, next_minute.hour, next_minute.day, next_minute.month,
                                      next_minute.year)
 
@@ -133,22 +141,22 @@ def _run_jobs(job_function_map):  # pragma: no cover
             while True:
                 thread = threads[thread_count - 1]  # type: threading.Thread
                 if not thread.is_alive():
-                    interval = next_schedule - datetime.now()  # type: timedelta
+                    interval = next_schedule - datetime.now(tz=get_localzone())  # type: timedelta
                     thread = threading.Timer(interval.total_seconds(), function_object)  # type: threading.Thread
                     threads[thread_count - 1] = thread
                     logger.info("Scheduling function '%s' to run at %s", function_object.__name__,
-                                next_schedule.strftime('%Y-%m-%d %H:%M:%S'))
+                                next_schedule.strftime('%Y-%m-%d %H:%M:%S%z'))
                     thread.start()
                     break
                 thread_count = len(job_function_map) if thread_count == 1 else thread_count - 1
                 time.sleep(1)
         else:
-            interval = next_schedule - datetime.now()  # type: timedelta
+            interval = next_schedule - datetime.now(tz=get_localzone())  # type: timedelta
             thread = threading.Timer(interval.total_seconds(), function_object)  # type: threading.Thread
             threads.append(thread)
             thread.start()
             logger.info("Scheduling function '%s' to run at %s", function_object.__name__,
-                        next_schedule.strftime('%Y-%m-%d %H:%M:%S'))
+                        next_schedule.strftime('%Y-%m-%d %H:%M:%S%z'))
     if len(threads):
         for thread in threads:
             thread.join()

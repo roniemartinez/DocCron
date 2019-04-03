@@ -4,6 +4,9 @@
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
+from pytz import BaseTzInfo
+from tzlocal import get_localzone
+
 from doccron.job import Job
 
 
@@ -17,9 +20,13 @@ class CronTable(object):
     def __init__(self, jobs, quartz=False):
         self._jobs = {}
         self._previous_schedule = None
+        self._timezone = get_localzone()
         for j in jobs:
+            if isinstance(j, BaseTzInfo):
+                self._timezone = j
+                continue
             try:
-                job = Job(j, quartz=quartz)
+                job = Job(j, quartz=quartz, timezone=self._timezone)
             except ValueError:
                 raise InvalidSchedule
             self._jobs[job] = next(job)

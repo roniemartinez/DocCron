@@ -7,12 +7,13 @@
 from datetime import datetime, timedelta
 
 import doccron
+from doccron.timezone import localize
 
 
 def test_year_list():
     cron = doccron.cron('45 17 7 6 * 2021,2022')
-    assert next(cron) == datetime(2021, 6, 7, 17, 45)
-    assert next(cron) == datetime(2022, 6, 7, 17, 45)
+    assert next(cron) == localize(datetime(2021, 6, 7, 17, 45))
+    assert next(cron) == localize(datetime(2022, 6, 7, 17, 45))
 
 
 def test_lists():

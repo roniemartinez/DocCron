@@ -8,6 +8,10 @@ import itertools
 from calendar import monthrange
 from datetime import datetime, MAXYEAR, timedelta
 
+from tzlocal import get_localzone
+
+from doccron.timezone import localize
+
 MONTH_NAMES = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 WEEKDAY_NAMES = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
@@ -20,8 +24,8 @@ def _parse_steps(item):
         return item, 1
 
 
-def _odometer(odometer, seconds):
-    current_time_tuple = tuple(datetime.now().timetuple())[:6]
+def _odometer(odometer, seconds, timezone):
+    current_time_tuple = tuple(datetime.now(tz=timezone).timetuple())[:6]
     for i in odometer:
         try:
             if i < current_time_tuple[:5]:
@@ -39,7 +43,7 @@ def _odometer(odometer, seconds):
 
 class Job(object):
 
-    def __init__(self, jobs, quartz=False):
+    def __init__(self, jobs, quartz=False, timezone=get_localzone()):
         self.seconds = [] if quartz else [0]
         self.minutes = []
         self.hours = []
@@ -47,6 +51,7 @@ class Job(object):
         self.weekdays = []
         self.months = []
         self.years = []
+        self.timezone = timezone
         self._quartz = quartz
         try:
             if self._quartz:
@@ -71,7 +76,7 @@ class Job(object):
         self._parse_year(year)
 
         self.iterator = _odometer(itertools.product(self.years, self.months, self.days, self.hours, self.minutes),
-                                  self.seconds)
+                                  self.seconds, self.timezone)
 
     def _parse_second(self, second):
         seconds, step = _parse_steps(second)
@@ -171,7 +176,7 @@ class Job(object):
     def _parse_year(self, year):
         years, step = _parse_steps(year)
         if years == '*':
-            self.years = list(range(datetime.now().year, MAXYEAR))
+            self.years = list(range(datetime.now(tz=self.timezone).year, MAXYEAR))
         else:
             for m in years.split(','):
                 if m.isdigit():
@@ -188,8 +193,8 @@ class Job(object):
         for i in self.iterator:
             try:
                 try:
-                    next_datetime = datetime(*i)
-                    if next_datetime <= datetime.now():
+                    next_datetime = localize(datetime(*i), self.timezone)
+                    if next_datetime <= datetime.now(tz=self.timezone):
                         continue
                     weekday = self.weekdays[0]
                     if len(self.weekdays) == 1 and isinstance(weekday, str):
@@ -211,17 +216,20 @@ class Job(object):
                     year, month, day, hour, minute, second = i
                     if day == 'L':
                         day = monthrange(year, month)[1]
-                        next_datetime = datetime(year, month, day, hour, minute, second)
-                        if next_datetime > datetime.now() and next_datetime.isoweekday() in self.weekdays:
+                        next_datetime = localize(datetime(year, month, day, hour, minute, second), self.timezone)
+                        if next_datetime > datetime.now(tz=self.timezone) and \
+                                next_datetime.isoweekday() in self.weekdays:
                             return next_datetime
                     elif day[-1] == 'W':
-                        next_datetime = datetime(year, month, int(day[:-1]), hour, minute, second)
-                        if next_datetime <= datetime.now() or next_datetime.isoweekday() not in self.weekdays:
+                        next_datetime = localize(datetime(year, month, int(day[:-1]), hour, minute, second),
+                                                 self.timezone)
+                        if next_datetime <= datetime.now(tz=self.timezone) or \
+                                next_datetime.isoweekday() not in self.weekdays:
                             continue
                         if next_datetime.isoweekday() == 6:
                             if next_datetime.day == 1:
                                 next_datetime += timedelta(days=2)
-                            elif (next_datetime - timedelta(days=1)) > datetime.now():
+                            elif (next_datetime - timedelta(days=1)) > datetime.now(tz=self.timezone):
                                 next_datetime -= timedelta(days=1)
                         elif next_datetime.isoweekday() in (0, 7):
                             next_datetime += timedelta(days=1)
