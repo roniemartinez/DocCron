@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+## 1.4.0 - 2019-11-24
+### Added
+- OSX tests
+- Python linter
+
+### Changed
+- Move metadata to setup.cfg
+
+### Removed
+- Drop Python 2 support
+
 ## 1.3.1 - 2019-04-03
 ### Added
 - Include examples (#28)

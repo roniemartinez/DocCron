@@ -19,4 +19,6 @@ def test_steps():
         next_datetime += timedelta(minutes=15)
     next_schedule = next(cron)  # type: datetime
     assert isinstance(next_schedule, datetime)
-    assert next_schedule.isoweekday() in [1, 2, 3, 4, 5]
+    assert next_schedule.day in [1, 15, 31]
+    assert next_schedule.hour in [0, 6, 12, 18]
+    assert next_schedule.minute in [0, 15, 30, 45]
