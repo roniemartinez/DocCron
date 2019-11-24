@@ -5,37 +5,33 @@ Schedule with Docstrings
 <table>
     <tr>
         <td>License</td>
-        <td><img src='https://img.shields.io/pypi/l/DocCron.svg'></td>
+        <td><img src='https://img.shields.io/pypi/l/DocCron.svg' alt="License"></td>
         <td>Version</td>
-        <td><img src='https://img.shields.io/pypi/v/DocCron.svg'></td>
+        <td><img src='https://img.shields.io/pypi/v/DocCron.svg' alt="Version"></td>
     </tr>
     <tr>
         <td>Travis CI</td>
-        <td><img src='https://travis-ci.org/roniemartinez/DocCron.svg?branch=master'></td>
+        <td><img src='https://travis-ci.org/roniemartinez/DocCron.svg?branch=master' alt="Travis CI"></td>
         <td>Coverage</td>
-        <td><img src='https://codecov.io/gh/roniemartinez/DocCron/branch/master/graph/badge.svg'></td>
+        <td><img src='https://codecov.io/gh/roniemartinez/DocCron/branch/master/graph/badge.svg' alt="CodeCov"></td>
     </tr>
     <tr>
         <td>AppVeyor</td>
-        <td><img src='https://ci.appveyor.com/api/projects/status/ceqj4tmh13r8hc79/branch/master?svg=true'></td>
+        <td><img src='https://ci.appveyor.com/api/projects/status/ceqj4tmh13r8hc79/branch/master?svg=true' alt="AppVeyor"></td>
         <td>Supported versions</td>
-        <td><img src='https://img.shields.io/pypi/pyversions/DocCron.svg'></td>
+        <td><img src='https://img.shields.io/pypi/pyversions/DocCron.svg' alt="Python Versions"></td>
     </tr>
     <tr>
         <td>Wheel</td>
-        <td><img src='https://img.shields.io/pypi/wheel/DocCron.svg'></td>
+        <td><img src='https://img.shields.io/pypi/wheel/DocCron.svg' alt="Wheel"></td>
         <td>Implementation</td>
-        <td><img src='https://img.shields.io/pypi/implementation/DocCron.svg'></td>
+        <td><img src='https://img.shields.io/pypi/implementation/DocCron.svg' alt="Implementation"></td>
     </tr>
     <tr>
         <td>Status</td>
-        <td><img src='https://img.shields.io/pypi/status/DocCron.svg'></td>
+        <td><img src='https://img.shields.io/pypi/status/DocCron.svg' alt="Status"></td>
         <td>Downloads</td>
-        <td><img src='https://img.shields.io/pypi/dm/DocCron.svg'></td>
-    </tr>
-    <tr>
-        <td>Show your support</td>
-        <td><a href='https://saythanks.io/to/roniemartinez'><img src='https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg'></a></td>
+        <td><img src='https://img.shields.io/pypi/dm/DocCron.svg' alt="Downloads"></td>
     </tr>
 </table>
 
