@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2019, Ronie Martinez"
+# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
@@ -48,8 +48,8 @@ def test_find_functions_with_docstrings():
     for next_schedule, function_object in doccron.run_jobs(simulate=True):
         jobs_found = True
         assert isinstance(next_schedule, datetime)
-        assert function_object.__name__ in ('foo', 'bar')
-        assert function_object.__name__ != 'baz'
+        assert function_object.__name__ in ("foo", "bar")
+        assert function_object.__name__ != "baz"
         run_count += 1
         if run_count == 5:
             break

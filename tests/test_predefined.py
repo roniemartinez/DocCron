@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2019, Ronie Martinez"
+# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
@@ -13,7 +13,7 @@ from doccron.timezone import localize
 
 
 def test_annually():
-    cron = doccron.cron('@annually')
+    cron = doccron.cron("@annually")
     now = datetime.now(tz=get_localzone())
     year = now.year if now < localize(datetime(now.year, 1, 1)) else now.year + 1
     assert next(cron) == localize(datetime(year, 1, 1, 0, 0))
@@ -22,7 +22,7 @@ def test_annually():
 
 
 def test_yearly():
-    cron = doccron.cron('@yearly')
+    cron = doccron.cron("@yearly")
     now = datetime.now(tz=get_localzone())
     year = now.year if now < localize(datetime(now.year, 1, 1)) else now.year + 1
     assert next(cron) == localize(datetime(year, 1, 1, 0, 0))
@@ -31,8 +31,10 @@ def test_yearly():
 
 
 def test_monthly():
-    cron = doccron.cron('@monthly')
-    next_month = datetime.now(tz=get_localzone()).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    cron = doccron.cron("@monthly")
+    next_month = datetime.now(tz=get_localzone()).replace(
+        day=1, hour=0, minute=0, second=0, microsecond=0
+    )
     for _ in range(3):
         if next_month.month == 12:
             next_month = next_month.replace(year=next_month.year + 1, month=1)
@@ -42,8 +44,10 @@ def test_monthly():
 
 
 def test_weekly():
-    cron = doccron.cron('@weekly')
-    next_sunday = datetime.now(tz=get_localzone()).replace(hour=0, minute=0, second=0, microsecond=0)
+    cron = doccron.cron("@weekly")
+    next_sunday = datetime.now(tz=get_localzone()).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
     while next_sunday.isoweekday() != 7:
         next_sunday += timedelta(days=1)
     if next_sunday <= datetime.now(tz=get_localzone()):
@@ -55,32 +59,40 @@ def test_weekly():
 
 
 def test_daily():
-    cron = doccron.cron('@daily')
-    next_day = datetime.now(tz=get_localzone()).replace(hour=0, minute=0, second=0, microsecond=0)
+    cron = doccron.cron("@daily")
+    next_day = datetime.now(tz=get_localzone()).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
     for _ in range(3):
         next_day += timedelta(days=1)
         assert next(cron) == next_day
 
 
 def test_midnight():
-    cron = doccron.cron('@midnight')
-    next_day = datetime.now(tz=get_localzone()).replace(hour=0, minute=0, second=0, microsecond=0)
+    cron = doccron.cron("@midnight")
+    next_day = datetime.now(tz=get_localzone()).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
     for _ in range(3):
         next_day += timedelta(days=1)
         assert next(cron) == next_day
 
 
 def test_hourly():
-    cron = doccron.cron('@hourly')
-    next_hour = datetime.now(tz=get_localzone()).replace(minute=0, second=0, microsecond=0)
+    cron = doccron.cron("@hourly")
+    next_hour = datetime.now(tz=get_localzone()).replace(
+        minute=0, second=0, microsecond=0
+    )
     for _ in range(3):
         next_hour += timedelta(hours=1)
         assert next(cron) == next_hour
 
 
 def test_reboot():
-    cron = doccron.cron('@reboot')
+    cron = doccron.cron("@reboot")
     # since granularity is per minute, @reboot is equivalent to the next minute
-    next_minute = datetime.now(tz=get_localzone()).replace(second=0, microsecond=0) + timedelta(minutes=1)
+    next_minute = datetime.now(tz=get_localzone()).replace(
+        second=0, microsecond=0
+    ) + timedelta(minutes=1)
     assert next(cron) == next_minute
     assert next(cron) is None

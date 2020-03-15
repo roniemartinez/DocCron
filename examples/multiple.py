@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2019, Ronie Martinez"
+# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
@@ -15,7 +15,7 @@ def foo():
 
         * * * * *
     """
-    print(time.strftime('%Y-%m-%d %H:%M:%S'), "foo")
+    print(time.strftime("%Y-%m-%d %H:%M:%S"), "foo")
 
 
 def bar():
@@ -24,8 +24,8 @@ def bar():
 
         * * * * *
     """
-    print(time.strftime('%Y-%m-%d %H:%M:%S'), "bar")
+    print(time.strftime("%Y-%m-%d %H:%M:%S"), "bar")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     doccron.run_jobs()
