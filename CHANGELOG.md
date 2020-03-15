@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 1.4.1 - 2020-03-15
+### Added
+- Include isort, black, flake8, mypy, safety, bandit 
+
+### Changed
+- Use poetry
+
 ## 1.4.0 - 2019-11-24
 ### Added
 - OSX tests

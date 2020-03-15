@@ -1,24 +1,37 @@
 #!/usr/bin/env python
 # __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2019, Ronie Martinez"
+# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 import itertools
 from calendar import monthrange
-from datetime import datetime, MAXYEAR, timedelta
+from datetime import MAXYEAR, datetime, timedelta
 
 from tzlocal import get_localzone
 
 from doccron.timezone import localize
 
-MONTH_NAMES = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
-WEEKDAY_NAMES = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+MONTH_NAMES = [
+    "jan",
+    "feb",
+    "mar",
+    "apr",
+    "may",
+    "jun",
+    "jul",
+    "aug",
+    "sep",
+    "oct",
+    "nov",
+    "dec",
+]
+WEEKDAY_NAMES = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
 
 def _parse_steps(item):
     try:
-        item, step = item.split('/', 1)
+        item, step = item.split("/", 1)
         return item, int(step)
     except ValueError:
         return item, 1
@@ -42,7 +55,6 @@ def _odometer(odometer, seconds, timezone):
 
 
 class Job(object):
-
     def __init__(self, jobs, quartz=False, timezone=get_localzone()):
         self.seconds = [] if quartz else [0]
         self.minutes = []
@@ -63,7 +75,7 @@ class Job(object):
                 second, minute, hour, day, month, weekday = jobs
             else:
                 minute, hour, day, month, weekday = jobs
-            year = '*'
+            year = "*"
 
         if self._quartz:
             # noinspection PyUnboundLocalVariable
@@ -75,114 +87,127 @@ class Job(object):
         self._parse_weekday(weekday)
         self._parse_year(year)
 
-        self.iterator = _odometer(itertools.product(self.years, self.months, self.days, self.hours, self.minutes),
-                                  self.seconds, self.timezone)
+        self.iterator = _odometer(
+            itertools.product(
+                self.years, self.months, self.days, self.hours, self.minutes
+            ),
+            self.seconds,
+            self.timezone,
+        )
 
     def _parse_second(self, second):
         seconds, step = _parse_steps(second)
-        if seconds == '*':
+        if seconds == "*":
             self.seconds = list(range(0, 60))
         else:
-            for m in seconds.split(','):
+            for m in seconds.split(","):
                 if m.isdigit():
                     self.seconds.append(int(m))
                 else:
-                    start, end = m.split('-', 1)
+                    start, end = m.split("-", 1)
                     self.seconds += list(range(int(start), int(end) + 1))
         self.seconds = sorted(self.seconds)[::step]
 
     def _parse_minute(self, minute):
         minutes, step = _parse_steps(minute)
-        if minutes == '*':
+        if minutes == "*":
             self.minutes = list(range(0, 60))
         else:
-            for m in minutes.split(','):
+            for m in minutes.split(","):
                 if m.isdigit():
                     self.minutes.append(int(m))
                 else:
-                    start, end = m.split('-', 1)
+                    start, end = m.split("-", 1)
                     self.minutes += list(range(int(start), int(end) + 1))
         self.minutes = sorted(self.minutes)[::step]
 
     def _parse_hour(self, hour):
         hours, step = _parse_steps(hour)
-        if hours == '*':
+        if hours == "*":
             self.hours = list(range(0, 24))
         else:
-            for m in hours.split(','):
+            for m in hours.split(","):
                 if m.isdigit():
                     self.hours.append(int(m))
                 else:
-                    start, end = m.split('-', 1)
+                    start, end = m.split("-", 1)
                     self.hours += list(range(int(start), int(end) + 1))
         self.hours = sorted(self.hours)[::step]
 
     def _parse_day(self, day):
         days, step = _parse_steps(day)
-        if days == '*':
+        if days == "*":
             self.days = list(range(1, 32))
-        elif days == 'L':
+        elif days == "L":
             self.days = [day]
-        elif days.endswith('W') and days[:-1].isdigit():
+        elif days.endswith("W") and days[:-1].isdigit():
             self.days = [days]
         else:
-            for m in days.split(','):
+            for m in days.split(","):
                 if m.isdigit():
                     self.days.append(int(m))
                 else:
-                    start, end = m.split('-', 1)
+                    start, end = m.split("-", 1)
                     self.days += list(range(int(start), int(end) + 1))
         self.days = sorted(self.days)[::step]
 
     def _parse_weekday(self, weekday):
         weekdays, step = _parse_steps(weekday)
-        if weekdays == '*':
+        if weekdays == "*":
             self.weekdays = list(range(1, 8))
-        elif weekdays.endswith('L') and weekdays[:-1].isdigit():
+        elif weekdays.endswith("L") and weekdays[:-1].isdigit():
             self.weekdays = [weekdays]
-        elif '#' in weekdays and all(x.isdigit() for x in weekdays.split('#')):
+        elif "#" in weekdays and all(x.isdigit() for x in weekdays.split("#")):
             self.weekdays = [weekdays]
         else:
-            for w in weekdays.split(','):
+            for w in weekdays.split(","):
                 if w.isdigit():
                     i = int(w)
                     self.weekdays.append(7 if i == 0 else i)  # sunday can be 0 in cron
                 elif w.isalpha():
                     self.weekdays.append(WEEKDAY_NAMES.index(w.lower()) + 1)
                 else:
-                    start, end = w.split('-', 1)
-                    start = start if start.isdigit() else WEEKDAY_NAMES.index(start.lower()) + 1
+                    start, end = w.split("-", 1)
+                    start = (
+                        start
+                        if start.isdigit()
+                        else WEEKDAY_NAMES.index(start.lower()) + 1
+                    )
                     end = end if end.isdigit() else WEEKDAY_NAMES.index(end.lower()) + 1
                     self.weekdays += list(range(int(start), int(end) + 1))
         self.weekdays = sorted(self.weekdays)[::step]
 
     def _parse_month(self, month):
         months, step = _parse_steps(month)
-        if months == '*':
+        if months == "*":
             self.months = list(range(1, 13))
         else:
-            for w in months.split(','):
+            for w in months.split(","):
                 if w.isdigit():
                     self.months.append(int(w))
                 elif w.isalpha():
                     self.months.append(MONTH_NAMES.index(w.lower()) + 1)
                 else:
-                    start, end = w.split('-', 1)
-                    start = start if start.isdigit() else MONTH_NAMES.index(start.lower()) + 1
+                    start, end = w.split("-", 1)
+                    start = (
+                        start
+                        if start.isdigit()
+                        else MONTH_NAMES.index(start.lower()) + 1
+                    )
                     end = end if end.isdigit() else MONTH_NAMES.index(end.lower()) + 1
                     self.months += list(range(int(start), int(end) + 1))
         self.months = sorted(self.months)[::step]
 
     def _parse_year(self, year):
         years, step = _parse_steps(year)
-        if years == '*':
+        if years == "*":
             self.years = list(range(datetime.now(tz=self.timezone).year, MAXYEAR))
         else:
-            for m in years.split(','):
+            for m in years.split(","):
                 if m.isdigit():
                     self.years.append(int(m))
                 else:
-                    start, end = m.split('-', 1)
+                    start, end = m.split("-", 1)
                     self.years += list(range(int(start), int(end) + 1))
         self.years = sorted(self.years)[::step]
 
@@ -198,38 +223,59 @@ class Job(object):
                         continue
                     weekday = self.weekdays[0]
                     if len(self.weekdays) == 1 and isinstance(weekday, str):
-                        if weekday[-1] == 'L' and next_datetime.isoweekday() == int(weekday[:-1]) \
-                                and (next_datetime + timedelta(days=7)).month != next_datetime.month:
+                        if (
+                            weekday[-1] == "L"
+                            and next_datetime.isoweekday() == int(weekday[:-1])
+                            and (next_datetime + timedelta(days=7)).month
+                            != next_datetime.month
+                        ):
                             return next_datetime
-                        elif '#' in weekday:
-                            weekday, order = map(int, weekday.split('#'))
+                        elif "#" in weekday:
+                            weekday, order = map(int, weekday.split("#"))
                             weekday = 7 if weekday == 0 else weekday
                             if next_datetime.isoweekday() != weekday:
                                 continue
-                            if next_datetime.month == (next_datetime - timedelta(days=7 * (order - 1))).month and \
-                                    next_datetime.month != (next_datetime - timedelta(days=7 * order)).month:
+                            if (
+                                next_datetime.month
+                                == (
+                                    next_datetime - timedelta(days=7 * (order - 1))
+                                ).month
+                                and next_datetime.month
+                                != (next_datetime - timedelta(days=7 * order)).month
+                            ):
                                 return next_datetime
                             continue
                     if next_datetime.isoweekday() in self.weekdays:
                         return next_datetime
                 except TypeError:  # non-standard characters
                     year, month, day, hour, minute, second = i
-                    if day == 'L':
+                    if day == "L":
                         day = monthrange(year, month)[1]
-                        next_datetime = localize(datetime(year, month, day, hour, minute, second), self.timezone)
-                        if next_datetime > datetime.now(tz=self.timezone) and \
-                                next_datetime.isoweekday() in self.weekdays:
+                        next_datetime = localize(
+                            datetime(year, month, day, hour, minute, second),
+                            self.timezone,
+                        )
+                        if (
+                            next_datetime > datetime.now(tz=self.timezone)
+                            and next_datetime.isoweekday() in self.weekdays
+                        ):
                             return next_datetime
-                    elif day[-1] == 'W':
-                        next_datetime = localize(datetime(year, month, int(day[:-1]), hour, minute, second),
-                                                 self.timezone)
-                        if next_datetime <= datetime.now(tz=self.timezone) or \
-                                next_datetime.isoweekday() not in self.weekdays:
+                    elif day[-1] == "W":
+                        next_datetime = localize(
+                            datetime(year, month, int(day[:-1]), hour, minute, second),
+                            self.timezone,
+                        )
+                        if (
+                            next_datetime <= datetime.now(tz=self.timezone)
+                            or next_datetime.isoweekday() not in self.weekdays
+                        ):
                             continue
                         if next_datetime.isoweekday() == 6:
                             if next_datetime.day == 1:
                                 next_datetime += timedelta(days=2)
-                            elif (next_datetime - timedelta(days=1)) > datetime.now(tz=self.timezone):
+                            elif (next_datetime - timedelta(days=1)) > datetime.now(
+                                tz=self.timezone
+                            ):
                                 next_datetime -= timedelta(days=1)
                         elif next_datetime.isoweekday() in (0, 7):
                             next_datetime += timedelta(days=1)
