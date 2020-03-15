@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2019, Ronie Martinez"
+# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
@@ -15,7 +15,7 @@ from doccron.timezone import localize
 
 def test_question_mark():
     current_year = datetime.now(tz=get_localzone()).year
-    cron = doccron.cron('45 17 7 6 ? {},{}'.format(current_year + 1, current_year + 2))
+    cron = doccron.cron("45 17 7 6 ? {},{}".format(current_year + 1, current_year + 2))
     assert next(cron) == localize(datetime(current_year + 1, 6, 7, 17, 45))
     assert next(cron) == localize(datetime(current_year + 2, 6, 7, 17, 45))
 
@@ -23,15 +23,17 @@ def test_question_mark():
 def test_last_day_of_month():
     now = datetime.now(tz=get_localzone())
     first_year = now.year if now < localize(datetime(now.year, 6, 30)) else now.year + 1
-    cron = doccron.cron('* * L 6 ? *')
+    cron = doccron.cron("* * L 6 ? *")
 
     assert next(cron) == localize(datetime(first_year, 6, 30, 0, 0))
     assert next(cron) == localize(datetime(first_year, 6, 30, 0, 1))
 
 
 def test_last_day_of_week_of_month():
-    cron = doccron.cron('0 0 * * 5L *')
-    last_friday = datetime.now(tz=get_localzone()).replace(hour=0, minute=0, second=0, microsecond=0)
+    cron = doccron.cron("0 0 * * 5L *")
+    last_friday = datetime.now(tz=get_localzone()).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
     while last_friday.isoweekday() != 5:
         last_friday += timedelta(days=1)
     for _ in range(3):
@@ -42,10 +44,14 @@ def test_last_day_of_week_of_month():
 
 
 def test_exact_weekday_of_month_should_not_move():
-    cron = doccron.cron('0 0 21W * 1 2050')
-    datetime_21 = localize(datetime(2050, 1, 21)).replace(hour=0, minute=0, second=0, microsecond=0)
+    cron = doccron.cron("0 0 21W * 1 2050")
+    datetime_21 = localize(datetime(2050, 1, 21)).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
     if datetime_21.day == 21:
-        datetime_21 += timedelta(days=monthrange(datetime_21.year, datetime_21.month)[-1])
+        datetime_21 += timedelta(
+            days=monthrange(datetime_21.year, datetime_21.month)[-1]
+        )
     while True:
         if datetime_21.day == 21 and datetime_21.isoweekday() in range(1, 6):
             break
@@ -54,10 +60,14 @@ def test_exact_weekday_of_month_should_not_move():
 
 
 def test_saturday_should_go_back_to_friday():
-    cron = doccron.cron('0 0 21W * 6 *')
-    datetime_21 = datetime.now(tz=get_localzone()).replace(hour=0, minute=0, second=0, microsecond=0)
+    cron = doccron.cron("0 0 21W * 6 *")
+    datetime_21 = datetime.now(tz=get_localzone()).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
     if datetime_21.day == 21:
-        datetime_21 += timedelta(days=monthrange(datetime_21.year, datetime_21.month)[-1])
+        datetime_21 += timedelta(
+            days=monthrange(datetime_21.year, datetime_21.month)[-1]
+        )
     while True:
         if datetime_21.day == 21 and datetime_21.isoweekday() == 6:
             break
@@ -66,8 +76,10 @@ def test_saturday_should_go_back_to_friday():
 
 
 def test_first_day_of_month_saturday_should_move_to_monday():
-    cron = doccron.cron('0 0 1W * 6 *')
-    datetime_1 = datetime.now(tz=get_localzone()).replace(hour=0, minute=0, second=0, microsecond=0)
+    cron = doccron.cron("0 0 1W * 6 *")
+    datetime_1 = datetime.now(tz=get_localzone()).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
     if datetime_1.day == 1:
         datetime_1 += timedelta(days=monthrange(datetime_1.year, datetime_1.month)[-1])
     while True:
@@ -78,10 +90,14 @@ def test_first_day_of_month_saturday_should_move_to_monday():
 
 
 def test_sunday_should_move_to_monday():
-    cron = doccron.cron('0 0 21W * 7 *')
-    datetime_21 = datetime.now(tz=get_localzone()).replace(hour=0, minute=0, second=0, microsecond=0)
+    cron = doccron.cron("0 0 21W * 7 *")
+    datetime_21 = datetime.now(tz=get_localzone()).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
     if datetime_21.day == 21:
-        datetime_21 += timedelta(days=monthrange(datetime_21.year, datetime_21.month)[-1])
+        datetime_21 += timedelta(
+            days=monthrange(datetime_21.year, datetime_21.month)[-1]
+        )
     while True:
         if datetime_21.day == 21 and datetime_21.isoweekday() == 7:
             break
@@ -90,15 +106,19 @@ def test_sunday_should_move_to_monday():
 
 
 def test_hash():
-    cron = doccron.cron('0 0 * * 7#2 *')
-    second_sunday = datetime.now(tz=get_localzone()).replace(hour=0, minute=0, second=0, microsecond=0)
+    cron = doccron.cron("0 0 * * 7#2 *")
+    second_sunday = datetime.now(tz=get_localzone()).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
     while True:
         second_sunday += timedelta(days=1)
         if second_sunday.isoweekday() == 7:
             break
     while True:
-        if second_sunday.month == (second_sunday - timedelta(days=7)).month and \
-                second_sunday.month != (second_sunday - timedelta(days=14)).month:
+        if (
+            second_sunday.month == (second_sunday - timedelta(days=7)).month
+            and second_sunday.month != (second_sunday - timedelta(days=14)).month
+        ):
             break
         second_sunday += timedelta(days=7)
     assert next(cron) == second_sunday
