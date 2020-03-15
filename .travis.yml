@@ -54,5 +54,5 @@ deploy:
   script: poetry publish
   skip_cleanup: true
   on:
-    branch: develop
+    branch: master
     condition: $TRAVIS_PYTHON_VERSION = "3.6" && $TRAVIS_OS_NAME == "linux"
