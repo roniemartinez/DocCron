@@ -59,13 +59,13 @@ def _odometer(
 
 class CronJob(object):
     def __init__(self, job: list, quartz: bool = False, timezone: tzinfo = tzlocal()):
-        self.seconds: List[int] = [] if quartz else [0]
-        self.minutes: List[int] = []
-        self.hours: List[int] = []
-        self.days: List[Union[int, str]] = []
-        self.weekdays: List[Union[int, str]] = []
-        self.months: List[int] = []
-        self.years: List[int] = []
+        self.seconds = [] if quartz else [0]  # type: List[int]
+        self.minutes = []  # type: List[int]
+        self.hours = []  # type: List[int]
+        self.days = []  # type: List[Union[int, str]]
+        self.weekdays = []  # type: List[Union[int, str]]
+        self.months = []  # type: List[int]
+        self.years = []  # type: List[int]
         self.timezone = timezone
         self._quartz = quartz
         try:
