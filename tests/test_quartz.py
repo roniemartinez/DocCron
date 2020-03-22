@@ -4,17 +4,13 @@
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
+from collections.abc import Iterator
 from datetime import datetime, timedelta
 
-from tzlocal import get_localzone
+from dateutil.tz import tzlocal
 
 import doccron
-from doccron.job import Job
-
-try:
-    from collections.abc import Iterator
-except ImportError:
-    from collections import Iterator
+from doccron.cron_job import CronJob
 
 
 def test_iter_cron_table():
@@ -23,7 +19,7 @@ def test_iter_cron_table():
 
 
 def test_iter_job():
-    job = iter(Job(["*"] * 6, quartz=True))
+    job = iter(CronJob(["*"] * 6, quartz=True))
     assert isinstance(job, Iterator)
 
 
@@ -39,7 +35,7 @@ def test_schedule_per_second():
     assert isinstance(cron, Iterator)
 
     next_schedule = next(cron)
-    assert next_schedule > datetime.now(tz=get_localzone()).replace(microsecond=0)
+    assert next_schedule > datetime.now(tz=tzlocal()).replace(microsecond=0)
     assert isinstance(next_schedule, datetime)
     for i in range(10):
         n = next(cron)
@@ -53,7 +49,7 @@ def test_schedule_per_second_list():
     assert isinstance(cron, Iterator)
 
     next_schedule = next(cron)
-    assert next_schedule > datetime.now(tz=get_localzone()).replace(microsecond=0)
+    assert next_schedule > datetime.now(tz=tzlocal()).replace(microsecond=0)
     assert isinstance(next_schedule, datetime)
     for i in range(0, 60, 10):
         n = next(cron)
@@ -67,7 +63,7 @@ def test_schedule_per_second_range_step():
     assert isinstance(cron, Iterator)
 
     next_schedule = next(cron)
-    assert next_schedule > datetime.now(tz=get_localzone()).replace(microsecond=0)
+    assert next_schedule > datetime.now(tz=tzlocal()).replace(microsecond=0)
     assert isinstance(next_schedule, datetime)
     for i in range(0, 60, 10):
         n = next(cron)

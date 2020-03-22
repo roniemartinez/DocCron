@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 1.5.0 - 2020-03-22
+### Added
+- Support @every interval (#14)
+
+### Changed
+- Drop pytz and tzlocal for python-dateutil
+
 ## 1.4.1 - 2020-03-15
 ### Added
 - Include isort, black, flake8, mypy, safety, bandit 

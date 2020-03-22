@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "doccron"
-version = "1.4.1"
+version = "1.5.0"
 description = "Schedule with Docstrings"
 authors = ["Ronie Martinez <ronmarti18@gmail.com>"]
 license = "MIT"
@@ -24,8 +24,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = ">=3.5, <4"
-pytz = "^2019.3"
-tzlocal = "^2.0.0"
+python-dateutil = "^2.8.1"
 
 [tool.poetry.dev-dependencies]
 codecov = "^2.0.16"

@@ -6,9 +6,10 @@
 # __email__ = "ronmarti18@gmail.com"
 import itertools
 from calendar import monthrange
-from datetime import MAXYEAR, datetime, timedelta
+from datetime import MAXYEAR, datetime, timedelta, tzinfo
+from typing import Any, Iterator, List, Tuple, Union
 
-from tzlocal import get_localzone
+from dateutil.tz import tzlocal
 
 from doccron.timezone import localize
 
@@ -29,7 +30,7 @@ MONTH_NAMES = [
 WEEKDAY_NAMES = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
 
-def _parse_steps(item):
+def _parse_steps(item: str) -> Tuple[str, int]:
     try:
         item, step = item.split("/", 1)
         return item, int(step)
@@ -37,7 +38,9 @@ def _parse_steps(item):
         return item, 1
 
 
-def _odometer(odometer, seconds, timezone):
+def _odometer(
+    odometer: Iterator[Tuple[Any, ...]], seconds: list, timezone: tzinfo
+) -> Iterator[Tuple[Any, ...]]:
     current_time_tuple = tuple(datetime.now(tz=timezone).timetuple())[:6]
     for i in odometer:
         try:
@@ -54,27 +57,27 @@ def _odometer(odometer, seconds, timezone):
             yield i + (second,)
 
 
-class Job(object):
-    def __init__(self, jobs, quartz=False, timezone=get_localzone()):
-        self.seconds = [] if quartz else [0]
-        self.minutes = []
-        self.hours = []
-        self.days = []
-        self.weekdays = []
-        self.months = []
-        self.years = []
+class CronJob(object):
+    def __init__(self, job: list, quartz: bool = False, timezone: tzinfo = tzlocal()):
+        self.seconds = [] if quartz else [0]  # type: List[int]
+        self.minutes = []  # type: List[int]
+        self.hours = []  # type: List[int]
+        self.days = []  # type: List[Union[int, str]]
+        self.weekdays = []  # type: List[Union[int, str]]
+        self.months = []  # type: List[int]
+        self.years = []  # type: List[int]
         self.timezone = timezone
         self._quartz = quartz
         try:
             if self._quartz:
-                second, minute, hour, day, month, weekday, year = jobs
+                second, minute, hour, day, month, weekday, year = job
             else:
-                minute, hour, day, month, weekday, year = jobs
+                minute, hour, day, month, weekday, year = job
         except ValueError:
             if self._quartz:
-                second, minute, hour, day, month, weekday = jobs
+                second, minute, hour, day, month, weekday = job
             else:
-                minute, hour, day, month, weekday = jobs
+                minute, hour, day, month, weekday = job
             year = "*"
 
         if self._quartz:
@@ -95,7 +98,7 @@ class Job(object):
             self.timezone,
         )
 
-    def _parse_second(self, second):
+    def _parse_second(self, second) -> None:
         seconds, step = _parse_steps(second)
         if seconds == "*":
             self.seconds = list(range(0, 60))
@@ -108,7 +111,7 @@ class Job(object):
                     self.seconds += list(range(int(start), int(end) + 1))
         self.seconds = sorted(self.seconds)[::step]
 
-    def _parse_minute(self, minute):
+    def _parse_minute(self, minute) -> None:
         minutes, step = _parse_steps(minute)
         if minutes == "*":
             self.minutes = list(range(0, 60))
@@ -121,7 +124,7 @@ class Job(object):
                     self.minutes += list(range(int(start), int(end) + 1))
         self.minutes = sorted(self.minutes)[::step]
 
-    def _parse_hour(self, hour):
+    def _parse_hour(self, hour) -> None:
         hours, step = _parse_steps(hour)
         if hours == "*":
             self.hours = list(range(0, 24))
@@ -134,7 +137,7 @@ class Job(object):
                     self.hours += list(range(int(start), int(end) + 1))
         self.hours = sorted(self.hours)[::step]
 
-    def _parse_day(self, day):
+    def _parse_day(self, day) -> None:
         days, step = _parse_steps(day)
         if days == "*":
             self.days = list(range(1, 32))
@@ -151,7 +154,7 @@ class Job(object):
                     self.days += list(range(int(start), int(end) + 1))
         self.days = sorted(self.days)[::step]
 
-    def _parse_weekday(self, weekday):
+    def _parse_weekday(self, weekday) -> None:
         weekdays, step = _parse_steps(weekday)
         if weekdays == "*":
             self.weekdays = list(range(1, 8))
@@ -171,13 +174,17 @@ class Job(object):
                     start = (
                         start
                         if start.isdigit()
-                        else WEEKDAY_NAMES.index(start.lower()) + 1
+                        else str(WEEKDAY_NAMES.index(start.lower()) + 1)
                     )
-                    end = end if end.isdigit() else WEEKDAY_NAMES.index(end.lower()) + 1
+                    end = (
+                        end
+                        if end.isdigit()
+                        else str(WEEKDAY_NAMES.index(end.lower()) + 1)
+                    )
                     self.weekdays += list(range(int(start), int(end) + 1))
         self.weekdays = sorted(self.weekdays)[::step]
 
-    def _parse_month(self, month):
+    def _parse_month(self, month) -> None:
         months, step = _parse_steps(month)
         if months == "*":
             self.months = list(range(1, 13))
@@ -192,13 +199,17 @@ class Job(object):
                     start = (
                         start
                         if start.isdigit()
-                        else MONTH_NAMES.index(start.lower()) + 1
+                        else str(MONTH_NAMES.index(start.lower()) + 1)
                     )
-                    end = end if end.isdigit() else MONTH_NAMES.index(end.lower()) + 1
+                    end = (
+                        end
+                        if end.isdigit()
+                        else str(MONTH_NAMES.index(end.lower()) + 1)
+                    )
                     self.months += list(range(int(start), int(end) + 1))
         self.months = sorted(self.months)[::step]
 
-    def _parse_year(self, year):
+    def _parse_year(self, year) -> None:
         years, step = _parse_steps(year)
         if years == "*":
             self.years = list(range(datetime.now(tz=self.timezone).year, MAXYEAR))
@@ -282,5 +293,3 @@ class Job(object):
                         return next_datetime
             except ValueError:
                 continue
-
-    next = __next__

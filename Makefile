@@ -18,4 +18,4 @@ check:
 	poetry run bandit -r doccron
 
 test:
-	poetry run pytest --cov=doccron --cov-report=xml -vv
+	poetry run pytest --cov=doccron --cov-report=xml --cov-report=html -vv

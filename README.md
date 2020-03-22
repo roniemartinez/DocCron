@@ -137,6 +137,7 @@ if __name__ == '__main__':
 - [Quartz format](http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html)
 - Works with documentation tools like [Sphinx](https://github.com/sphinx-doc/sphinx)
 - Timezone-awareness (CRON_TZ)
+- Interval (e.g., `@every 1h2m3s`)
 
 ## TODO
 
@@ -146,6 +147,7 @@ if __name__ == '__main__':
 
 - [Cron Format](http://www.nncron.ru/help/EN/working/cron-format.htm)
 - [Wikipedia - Cron](https://en.wikipedia.org/wiki/Cron)
+- [cron library for Go](https://godoc.org/github.com/revel/cron)
 
 ## Author
 

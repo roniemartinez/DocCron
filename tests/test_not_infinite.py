@@ -6,7 +6,7 @@
 # __email__ = "ronmarti18@gmail.com"
 from datetime import datetime, timedelta
 
-from tzlocal import get_localzone
+from dateutil.tz import tzlocal
 
 import doccron
 
@@ -16,7 +16,7 @@ def bar():
 
 
 def test_non_infinite_jobs():
-    next_minute = datetime.now(tz=get_localzone()).replace(
+    next_minute = datetime.now(tz=tzlocal()).replace(
         second=0, microsecond=0
     ) + timedelta(minutes=1)
     bar.__doc__ = """
@@ -32,7 +32,7 @@ def test_non_infinite_jobs():
     )
     jobs_found = False
     for next_schedule, function_object in doccron.run_jobs(simulate=True):
-        assert next_schedule == datetime.now(tz=get_localzone()).replace(
+        assert next_schedule == datetime.now(tz=tzlocal()).replace(
             second=0, microsecond=0
         ) + timedelta(minutes=1)
         jobs_found = True

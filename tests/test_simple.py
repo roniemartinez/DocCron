@@ -4,21 +4,16 @@
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
+from collections.abc import Iterator
 from datetime import datetime, timedelta
 
-# noinspection PyPackageRequirements
 import pytest
-from tzlocal import get_localzone
+from dateutil.tz import tzlocal
 
 import doccron
-from doccron.job import Job
-from doccron.table import InvalidSchedule
+from doccron.cron_job import CronJob
+from doccron.exceptions import InvalidSchedule
 from doccron.timezone import localize
-
-try:
-    from collections.abc import Iterator
-except ImportError:
-    from collections import Iterator
 
 
 def test_comments():
@@ -36,8 +31,8 @@ def test_iter_cron_table():
     assert isinstance(cron, Iterator)
 
 
-def test_iter_job():
-    job = iter(Job(["*"] * 5))
+def test_iter_cron_job():
+    job = iter(CronJob(["*"] * 5))
     assert isinstance(job, Iterator)
 
 
@@ -49,12 +44,11 @@ def test_not_repeated():
 
 
 def test_schedule_per_minute():
-    current_datetime = datetime.now(tz=get_localzone()).replace(second=0, microsecond=0)
+    current_datetime = datetime.now(tz=tzlocal()).replace(second=0, microsecond=0)
     cron = doccron.cron("* * * * *")
     assert isinstance(cron, Iterator)
 
     for i in range(1, 6):
-        # noinspection PyTypeChecker
         next_schedule = next(cron)
         assert isinstance(next_schedule, datetime)
         assert next_schedule == current_datetime + timedelta(minutes=i)
