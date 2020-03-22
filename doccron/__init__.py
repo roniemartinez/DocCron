@@ -24,7 +24,7 @@ DURATION = re.compile(r"^((?P<hours>\d+)h)?((?P<minutes>\d+)m)?((?P<seconds>\d+)
 
 def parse_duration(duration: str) -> timedelta:
     match = DURATION.match(duration)
-    if not bool(match):
+    if not match:
         raise InvalidSchedule
     matches = match.groupdict(default="0")
     return timedelta(

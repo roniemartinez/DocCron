@@ -6,7 +6,7 @@
 # __email__ = "ronmarti18@gmail.com"
 from datetime import timedelta
 
-from dateutil.tz import tzfile, tzlocal
+from dateutil.tz import tzfile, tzlocal, tzwin  # type: ignore
 
 from doccron.cron_job import CronJob
 from doccron.exceptions import InvalidSchedule
@@ -19,9 +19,14 @@ class CronTable(object):
         self._previous_schedule = None
         self._timezone = tzlocal()
         for j in jobs:
-            if isinstance(j, tzfile):
-                self._timezone = j
-                continue
+            try:
+                if isinstance(j, tzwin):
+                    self._timezone = j
+                    continue
+            except TypeError:
+                if isinstance(j, tzfile):
+                    self._timezone = j
+                    continue
             if isinstance(j, timedelta):
                 job = IntervalJob(j, quartz, timezone=self._timezone)
             else:
