@@ -6,22 +6,42 @@
 # __email__ = "ronmarti18@gmail.com"
 import inspect
 import logging
+import re
 import threading
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, tzinfo
+from typing import Iterator, Optional, Union
 
-import pytz
-from tzlocal import get_localzone
+from dateutil.tz import tz, tzlocal
 
+from doccron.exceptions import InvalidSchedule
 from doccron.table import CronTable
 
 logger = logging.getLogger("doccron")
 
+DURATION = re.compile(r"((?P<hours>\d+)h)?((?P<minutes>\d+)m)?((?P<seconds>\d+)s)?")
 
-def _tokenize_by_percent(jobs):
+
+def parse_duration(duration: str) -> timedelta:
+    match = DURATION.match(duration)
+    if not match:
+        raise InvalidSchedule
+    matches = match.groupdict(default="0")
+    return timedelta(
+        hours=int(matches["hours"]),
+        minutes=int(matches["minutes"]),
+        seconds=int(matches["seconds"]),
+    )
+
+
+def _tokenize_by_percent(jobs: str) -> Iterator[Union[timedelta, list]]:
     for job in jobs.split("%"):
         job = job.strip()
-        if job.startswith("@"):
+        if job.startswith("@every"):
+            interval = job.split(" ", 2)[1]
+            yield parse_duration(interval)
+            continue
+        elif job.startswith("@"):
             job = {
                 "@annually": "0 0 1 1 *",
                 "@yearly": "0 0 1 1 *",
@@ -39,15 +59,22 @@ def _tokenize_by_percent(jobs):
         yield job.split(None, 6)
 
 
-def tokenize(jobs, quartz=False):
+def tokenize(
+    jobs: Union[list, str], quartz=False
+) -> Iterator[Union[timedelta, Optional[tzinfo], list]]:
     if isinstance(jobs, str):
-        jobs = jobs.splitlines()
-    for job in jobs:  # type: str
+        job_list = jobs.splitlines()
+    else:
+        job_list = jobs
+    for job in job_list:  # type: str
         job = job.strip()
         if job.startswith("CRON_TZ"):
-            yield pytz.timezone(job.split("=", 2)[1].strip())
+            yield tz.gettz(job.split("=", 2)[1].strip())
             continue
         for tokens in _tokenize_by_percent(job):
+            if isinstance(tokens, timedelta):
+                yield tokens
+                continue
             length = len(tokens)
             if quartz:
                 tokens += ["*"] * (7 - length)
@@ -85,7 +112,7 @@ def parse_schedules(docstring):
 
 
 def _next_minute():
-    next_minute = datetime.now(tz=get_localzone()).replace(
+    next_minute = datetime.now(tz=tzlocal()).replace(
         second=0, microsecond=0
     ) + timedelta(minutes=1)
     return "{} {} {} {} * {}".format(
@@ -97,15 +124,14 @@ def _next_minute():
     )
 
 
-def cron(jobs, quartz=False):
+def cron(jobs: Union[str, list], quartz: bool = False) -> CronTable:
     return CronTable(tokenize(jobs), quartz=quartz)
 
 
-def cron_quartz(jobs):
+def cron_quartz(jobs: Union[str, list]) -> CronTable:
     return cron(jobs, quartz=True)
 
 
-# noinspection PyShadowingNames
 def _job_iter(job_function_map):
     job_map = {}
     for job in job_function_map.keys():
@@ -119,10 +145,10 @@ def _job_iter(job_function_map):
         job_map[job] = next(job)
 
 
-def run_jobs(quartz=False, simulate=False):
+def run_jobs(quartz: bool = False, simulate: bool = False):
     job_function_map = {}
     logger.info("Searching jobs")
-    for function_object in inspect.currentframe().f_back.f_globals.values():
+    for function_object in inspect.currentframe().f_back.f_globals.values():  # type: ignore
         if inspect.isfunction(function_object):
             docstring = inspect.getdoc(function_object)
             if docstring and isinstance(docstring, str):
@@ -153,7 +179,7 @@ def _run_jobs(job_function_map):  # pragma: no cover
                 thread = threads[thread_count - 1]  # type: threading.Thread
                 if not thread.is_alive():
                     interval = next_schedule - datetime.now(
-                        tz=get_localzone()
+                        tz=tzlocal()
                     )  # type: timedelta
                     thread = threading.Timer(
                         interval.total_seconds(), function_object
@@ -171,9 +197,7 @@ def _run_jobs(job_function_map):  # pragma: no cover
                 )
                 time.sleep(1)
         else:
-            interval = next_schedule - datetime.now(
-                tz=get_localzone()
-            )  # type: timedelta
+            interval = next_schedule - datetime.now(tz=tzlocal())  # type: timedelta
             thread = threading.Timer(
                 interval.total_seconds(), function_object
             )  # type: threading.Thread

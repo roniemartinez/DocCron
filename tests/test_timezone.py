@@ -4,22 +4,19 @@
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
+from collections.abc import Iterator
 from datetime import datetime, timedelta
 
-from tzlocal import get_localzone
+from dateutil.tz import tzlocal
 
 import doccron
 
-try:
-    from collections.abc import Iterator
-except ImportError:
-    from collections import Iterator
-
 
 def test_single_timezone():
-    current_datetime = datetime.now(tz=get_localzone()).replace(
+    current_datetime = datetime.now(tz=tzlocal()).replace(
         minute=0, second=0, microsecond=0
     )
+    print(current_datetime)
     cron = doccron.cron(
         """CRON_TZ=Japan
     0 * * * *"""
@@ -33,7 +30,7 @@ def test_single_timezone():
 
 
 def test_multiple_timezone():
-    current_datetime = datetime.now(tz=get_localzone()).replace(
+    current_datetime = datetime.now(tz=tzlocal()).replace(
         minute=0, second=0, microsecond=0
     )
 

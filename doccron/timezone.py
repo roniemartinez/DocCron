@@ -4,8 +4,10 @@
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
-from tzlocal import get_localzone
+from datetime import datetime
+
+from dateutil.tz import tzlocal
 
 
-def localize(datetime, timezone=get_localzone()):
-    return timezone.localize(datetime, is_dst=None)
+def localize(dt: datetime, timezone=tzlocal()) -> datetime:
+    return dt.replace(tzinfo=timezone)
