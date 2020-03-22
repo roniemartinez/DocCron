@@ -11,13 +11,13 @@ Schedule with Docstrings
     </tr>
     <tr>
         <td>Travis CI</td>
-        <td><img src='https://travis-ci.org/roniemartinez/DocCron.svg?branch=develop' alt="Travis CI"></td>
+        <td><img src='https://travis-ci.org/roniemartinez/DocCron.svg?branch=master' alt="Travis CI"></td>
         <td>Coverage</td>
-        <td><img src='https://codecov.io/gh/roniemartinez/DocCron/branch/develop/graph/badge.svg' alt="CodeCov"></td>
+        <td><img src='https://codecov.io/gh/roniemartinez/DocCron/branch/master/graph/badge.svg' alt="CodeCov"></td>
     </tr>
     <tr>
         <td>AppVeyor</td>
-        <td><img src='https://ci.appveyor.com/api/projects/status/ceqj4tmh13r8hc79/branch/develop?svg=true' alt="AppVeyor"></td>
+        <td><img src='https://ci.appveyor.com/api/projects/status/ceqj4tmh13r8hc79/branch/master?svg=true' alt="AppVeyor"></td>
         <td>Supported versions</td>
         <td><img src='https://img.shields.io/pypi/pyversions/DocCron.svg' alt="Python Versions"></td>
     </tr>
