@@ -19,14 +19,15 @@ class CronTable(object):
         self._previous_schedule = None
         self._timezone = tzlocal()
         for j in jobs:
+            if isinstance(j, tzfile):
+                self._timezone = j
+                continue
             try:
                 if isinstance(j, tzwin):
                     self._timezone = j
                     continue
             except TypeError:
-                if isinstance(j, tzfile):
-                    self._timezone = j
-                    continue
+                pass
             if isinstance(j, timedelta):
                 job = IntervalJob(j, quartz, timezone=self._timezone)
             else:
