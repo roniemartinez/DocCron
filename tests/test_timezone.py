@@ -16,7 +16,6 @@ def test_single_timezone():
     current_datetime = datetime.now(tz=tzlocal()).replace(
         minute=0, second=0, microsecond=0
     )
-    print(current_datetime)
     cron = doccron.cron(
         """CRON_TZ=Japan
     0 * * * *"""
@@ -44,6 +43,5 @@ def test_multiple_timezone():
 
     for i in range(1, 6):
         next_schedule = next(cron)
-        print(i, next_schedule)
         assert isinstance(next_schedule, datetime)
         assert next_schedule == current_datetime + timedelta(hours=i)

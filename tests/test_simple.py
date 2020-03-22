@@ -31,7 +31,7 @@ def test_iter_cron_table():
     assert isinstance(cron, Iterator)
 
 
-def test_iter_job():
+def test_iter_cron_job():
     job = iter(CronJob(["*"] * 5))
     assert isinstance(job, Iterator)
 

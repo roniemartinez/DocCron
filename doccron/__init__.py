@@ -19,12 +19,12 @@ from doccron.table import CronTable
 
 logger = logging.getLogger("doccron")
 
-DURATION = re.compile(r"((?P<hours>\d+)h)?((?P<minutes>\d+)m)?((?P<seconds>\d+)s)?")
+DURATION = re.compile(r"^((?P<hours>\d+)h)?((?P<minutes>\d+)m)?((?P<seconds>\d+)s)?$")
 
 
 def parse_duration(duration: str) -> timedelta:
     match = DURATION.match(duration)
-    if not match:
+    if not bool(match):
         raise InvalidSchedule
     matches = match.groupdict(default="0")
     return timedelta(
