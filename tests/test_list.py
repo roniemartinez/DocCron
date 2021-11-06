@@ -1,22 +1,19 @@
-#!/usr/bin/env python
-# __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
-# __credits__ = ["Ronie Martinez"]
-# __maintainer__ = "Ronie Martinez"
-# __email__ = "ronmarti18@gmail.com"
 from datetime import datetime, timedelta
+
+from freezegun import freeze_time
 
 import doccron
 from doccron.timezone import localize
 
 
-def test_year_list():
+@freeze_time("2020-01-01")
+def test_year_list() -> None:
     cron = doccron.cron("45 17 7 6 * 2021,2022")
     assert next(cron) == localize(datetime(2021, 6, 7, 17, 45))
     assert next(cron) == localize(datetime(2022, 6, 7, 17, 45))
 
 
-def test_lists():
+def test_lists() -> None:
     cron = doccron.cron("0,15,30,45 0,6,12,18 1,15,31 * 1,2,3,4,5 *")
     next_datetime = datetime.now().replace(minute=0, second=0, microsecond=0)
     while True:

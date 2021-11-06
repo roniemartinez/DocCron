@@ -1,16 +1,10 @@
-#!/usr/bin/env python
-# __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
-# __credits__ = ["Ronie Martinez"]
-# __maintainer__ = "Ronie Martinez"
-# __email__ = "ronmarti18@gmail.com"
 import inspect
 import logging
 import re
 import threading
 import time
 from datetime import datetime, timedelta, tzinfo
-from typing import Iterator, Optional, Union
+from typing import Any, Dict, Iterator, List, Optional, Tuple, Union
 
 from dateutil.tz import tz, tzlocal
 
@@ -59,9 +53,7 @@ def _tokenize_by_percent(jobs: str) -> Iterator[Union[timedelta, list]]:
         yield job.split(None, 6)
 
 
-def tokenize(
-    jobs: Union[list, str], quartz=False
-) -> Iterator[Union[timedelta, Optional[tzinfo], list]]:
+def tokenize(jobs: Union[list, str], quartz: bool = False) -> Iterator[Union[timedelta, Optional[tzinfo], list]]:
     if isinstance(jobs, str):
         job_list = jobs.splitlines()
     else:
@@ -83,9 +75,9 @@ def tokenize(
             yield tokens
 
 
-def parse_schedules(docstring):
+def parse_schedules(docstring: str) -> Dict[str, List[str]]:
     lines = iter(docstring.splitlines())
-    schedules = {"cron": []}
+    schedules: Dict[str, List[str]] = {"cron": []}
     for line in lines:
         if line.strip() == "/etc/crontab::":
             leading_whitespaces = len(line) - len(line.lstrip())
@@ -97,10 +89,7 @@ def parse_schedules(docstring):
                     schedule = line.strip()
                     if indented is None:
                         indented = len(line) - len(line.lstrip()) > leading_whitespaces
-                    if (
-                        indented
-                        and len(line) - len(line.lstrip()) <= leading_whitespaces
-                    ):
+                    if indented and len(line) - len(line.lstrip()) <= leading_whitespaces:
                         break
                     if len(schedule) and schedule[0] not in ":@":
                         schedules["cron"].append(schedule)
@@ -111,10 +100,8 @@ def parse_schedules(docstring):
     return schedules
 
 
-def _next_minute():
-    next_minute = datetime.now(tz=tzlocal()).replace(
-        second=0, microsecond=0
-    ) + timedelta(minutes=1)
+def _next_minute() -> str:
+    next_minute = datetime.now(tz=tzlocal()).replace(second=0, microsecond=0) + timedelta(minutes=1)
     return "{} {} {} {} * {}".format(
         next_minute.minute,
         next_minute.hour,
@@ -132,7 +119,7 @@ def cron_quartz(jobs: Union[str, list]) -> CronTable:
     return cron(jobs, quartz=True)
 
 
-def _job_iter(job_function_map):
+def _job_iter(job_function_map: Dict[Any, Any]) -> Iterator[Tuple[Any, Any]]:
     job_map = {}
     for job in job_function_map.keys():
         job_map[job] = next(job)
@@ -145,7 +132,7 @@ def _job_iter(job_function_map):
         job_map[job] = next(job)
 
 
-def run_jobs(quartz: bool = False, simulate: bool = False):
+def run_jobs(quartz: bool = False, simulate: bool = False) -> Iterator[Tuple[Any, Any]]:
     job_function_map = {}
     logger.info("Searching jobs")
     for function_object in inspect.currentframe().f_back.f_globals.values():  # type: ignore
@@ -157,33 +144,29 @@ def run_jobs(quartz: bool = False, simulate: bool = False):
                     schedules = parse_schedules(docstring)
                     cron_schedules = schedules["cron"]
                     if len(cron_schedules):
-                        job_function_map[
-                            cron(cron_schedules, quartz=quartz)
-                        ] = function_object
+                        job_function_map[cron(cron_schedules, quartz=quartz)] = function_object
     if simulate:
         logger.info("Simulation started")
         return _job_iter(job_function_map)
     _run_jobs(job_function_map)  # pragma: no cover
+    return iter([])
 
 
-def _run_jobs(job_function_map):  # pragma: no cover
+def _run_jobs(job_function_map: Dict[Any, Any]) -> None:  # pragma: no cover
     """
     Executes all scheduled functions. Not testable at the moment due to threading. Excluded from code coverage.
     :param job_function_map:
     """
-    threads = []
+    threads: List[threading.Thread] = []
+    interval: timedelta
     for next_schedule, function_object in _job_iter(job_function_map):
         thread_count = len(threads)
         if thread_count == len(job_function_map):
             while True:
-                thread = threads[thread_count - 1]  # type: threading.Thread
+                thread = threads[thread_count - 1]
                 if not thread.is_alive():
-                    interval = next_schedule - datetime.now(
-                        tz=tzlocal()
-                    )  # type: timedelta
-                    thread = threading.Timer(
-                        interval.total_seconds(), function_object
-                    )  # type: threading.Thread
+                    interval = next_schedule - datetime.now(tz=tzlocal())
+                    thread = threading.Timer(interval.total_seconds(), function_object)
                     threads[thread_count - 1] = thread
                     logger.info(
                         "Scheduling function '%s' to run at %s",
@@ -192,15 +175,11 @@ def _run_jobs(job_function_map):  # pragma: no cover
                     )
                     thread.start()
                     break
-                thread_count = (
-                    len(job_function_map) if thread_count == 1 else thread_count - 1
-                )
+                thread_count = len(job_function_map) if thread_count == 1 else thread_count - 1
                 time.sleep(1)
         else:
-            interval = next_schedule - datetime.now(tz=tzlocal())  # type: timedelta
-            thread = threading.Timer(
-                interval.total_seconds(), function_object
-            )  # type: threading.Thread
+            interval = next_schedule - datetime.now(tz=tzlocal())
+            thread = threading.Timer(interval.total_seconds(), function_object)
             threads.append(thread)
             thread.start()
             logger.info(

@@ -10,22 +10,16 @@ Schedule with Docstrings
         <td><img src='https://img.shields.io/pypi/v/DocCron.svg' alt="Version"></td>
     </tr>
     <tr>
-        <td>Travis CI</td>
-        <td><img src='https://travis-ci.org/roniemartinez/DocCron.svg?branch=master' alt="Travis CI"></td>
+        <td>Github Actions</td>
+        <td><img src='https://github.com/roniemartinez/DocCron/actions/workflows/python.yml/badge.svg' alt="Github Actions"></td>
         <td>Coverage</td>
         <td><img src='https://codecov.io/gh/roniemartinez/DocCron/branch/master/graph/badge.svg' alt="CodeCov"></td>
     </tr>
     <tr>
-        <td>AppVeyor</td>
-        <td><img src='https://ci.appveyor.com/api/projects/status/ceqj4tmh13r8hc79/branch/master?svg=true' alt="AppVeyor"></td>
         <td>Supported versions</td>
         <td><img src='https://img.shields.io/pypi/pyversions/DocCron.svg' alt="Python Versions"></td>
-    </tr>
-    <tr>
         <td>Wheel</td>
         <td><img src='https://img.shields.io/pypi/wheel/DocCron.svg' alt="Wheel"></td>
-        <td>Implementation</td>
-        <td><img src='https://img.shields.io/pypi/implementation/DocCron.svg' alt="Implementation"></td>
     </tr>
     <tr>
         <td>Status</td>
@@ -34,6 +28,11 @@ Schedule with Docstrings
         <td><img src='https://img.shields.io/pypi/dm/DocCron.svg' alt="Downloads"></td>
     </tr>
 </table>
+
+## Support
+If you like `DocCron` or if it is useful to you, show your support by buying me a coffee.
+
+<a href="https://www.buymeacoffee.com/roniemartinez" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 ## Installation
 
@@ -141,7 +140,7 @@ if __name__ == '__main__':
 
 ## TODO
 
-- Human readable date/time strings 
+- Human-readable date/time strings 
 
 ## References
 

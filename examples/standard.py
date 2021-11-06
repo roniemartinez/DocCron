@@ -1,13 +1,7 @@
-#!/usr/bin/env python
-# __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
-# __credits__ = ["Ronie Martinez"]
-# __maintainer__ = "Ronie Martinez"
-# __email__ = "ronmarti18@gmail.com"
 import time
 
 
-def hello():
+def hello() -> None:
     """
     Print "hello world" at every 2nd minute and 3rd minute:
 

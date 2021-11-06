@@ -1,13 +1,7 @@
-#!/usr/bin/env python
-# __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
-# __credits__ = ["Ronie Martinez"]
-# __maintainer__ = "Ronie Martinez"
-# __email__ = "ronmarti18@gmail.com"
 import doccron
 
 
-def test_tokenizer():
+def test_tokenizer() -> None:
     assert [["*"] * 6] == list(doccron.tokenize("* * * * *"))
     assert [["*"] * 6] == list(doccron.tokenize("* * * * * *"))
     assert [["*"] * 6] == list(doccron.tokenize("*  * * * *"))

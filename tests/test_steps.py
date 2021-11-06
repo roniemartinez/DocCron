@@ -1,15 +1,9 @@
-#!/usr/bin/env python
-# __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
-# __credits__ = ["Ronie Martinez"]
-# __maintainer__ = "Ronie Martinez"
-# __email__ = "ronmarti18@gmail.com"
 from datetime import datetime, timedelta
 
 import doccron
 
 
-def test_steps():
+def test_steps() -> None:
     cron = doccron.cron("*/15 */6 1,15,31 * *")
     next_datetime = datetime.now().replace(minute=0, second=0, microsecond=0)
     while True:

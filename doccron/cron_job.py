@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
-# __credits__ = ["Ronie Martinez"]
-# __maintainer__ = "Ronie Martinez"
-# __email__ = "ronmarti18@gmail.com"
 import itertools
 from calendar import monthrange
 from datetime import MAXYEAR, datetime, timedelta, tzinfo
@@ -38,9 +32,7 @@ def _parse_steps(item: str) -> Tuple[str, int]:
         return item, 1
 
 
-def _odometer(
-    odometer: Iterator[Tuple[Any, ...]], seconds: list, timezone: tzinfo
-) -> Iterator[Tuple[Any, ...]]:
+def _odometer(odometer: Iterator[Tuple[Any, ...]], seconds: list, timezone: tzinfo) -> Iterator[Tuple[Any, ...]]:
     current_time_tuple = tuple(datetime.now(tz=timezone).timetuple())[:6]
     for i in odometer:
         try:
@@ -57,7 +49,7 @@ def _odometer(
             yield i + (second,)
 
 
-class CronJob(object):
+class CronJob:
     def __init__(self, job: list, quartz: bool = False, timezone: tzinfo = tzlocal()):
         self.seconds = [] if quartz else [0]  # type: List[int]
         self.minutes = []  # type: List[int]
@@ -91,14 +83,12 @@ class CronJob(object):
         self._parse_year(year)
 
         self.iterator = _odometer(
-            itertools.product(
-                self.years, self.months, self.days, self.hours, self.minutes
-            ),
+            itertools.product(self.years, self.months, self.days, self.hours, self.minutes),
             self.seconds,
             self.timezone,
         )
 
-    def _parse_second(self, second) -> None:
+    def _parse_second(self, second: str) -> None:
         seconds, step = _parse_steps(second)
         if seconds == "*":
             self.seconds = list(range(0, 60))
@@ -111,7 +101,7 @@ class CronJob(object):
                     self.seconds += list(range(int(start), int(end) + 1))
         self.seconds = sorted(self.seconds)[::step]
 
-    def _parse_minute(self, minute) -> None:
+    def _parse_minute(self, minute: str) -> None:
         minutes, step = _parse_steps(minute)
         if minutes == "*":
             self.minutes = list(range(0, 60))
@@ -124,7 +114,7 @@ class CronJob(object):
                     self.minutes += list(range(int(start), int(end) + 1))
         self.minutes = sorted(self.minutes)[::step]
 
-    def _parse_hour(self, hour) -> None:
+    def _parse_hour(self, hour: str) -> None:
         hours, step = _parse_steps(hour)
         if hours == "*":
             self.hours = list(range(0, 24))
@@ -137,7 +127,7 @@ class CronJob(object):
                     self.hours += list(range(int(start), int(end) + 1))
         self.hours = sorted(self.hours)[::step]
 
-    def _parse_day(self, day) -> None:
+    def _parse_day(self, day: str) -> None:
         days, step = _parse_steps(day)
         if days == "*":
             self.days = list(range(1, 32))
@@ -154,7 +144,7 @@ class CronJob(object):
                     self.days += list(range(int(start), int(end) + 1))
         self.days = sorted(self.days)[::step]
 
-    def _parse_weekday(self, weekday) -> None:
+    def _parse_weekday(self, weekday: str) -> None:
         weekdays, step = _parse_steps(weekday)
         if weekdays == "*":
             self.weekdays = list(range(1, 8))
@@ -171,20 +161,12 @@ class CronJob(object):
                     self.weekdays.append(WEEKDAY_NAMES.index(w.lower()) + 1)
                 else:
                     start, end = w.split("-", 1)
-                    start = (
-                        start
-                        if start.isdigit()
-                        else str(WEEKDAY_NAMES.index(start.lower()) + 1)
-                    )
-                    end = (
-                        end
-                        if end.isdigit()
-                        else str(WEEKDAY_NAMES.index(end.lower()) + 1)
-                    )
+                    start = start if start.isdigit() else str(WEEKDAY_NAMES.index(start.lower()) + 1)
+                    end = end if end.isdigit() else str(WEEKDAY_NAMES.index(end.lower()) + 1)
                     self.weekdays += list(range(int(start), int(end) + 1))
         self.weekdays = sorted(self.weekdays)[::step]
 
-    def _parse_month(self, month) -> None:
+    def _parse_month(self, month: str) -> None:
         months, step = _parse_steps(month)
         if months == "*":
             self.months = list(range(1, 13))
@@ -196,20 +178,12 @@ class CronJob(object):
                     self.months.append(MONTH_NAMES.index(w.lower()) + 1)
                 else:
                     start, end = w.split("-", 1)
-                    start = (
-                        start
-                        if start.isdigit()
-                        else str(MONTH_NAMES.index(start.lower()) + 1)
-                    )
-                    end = (
-                        end
-                        if end.isdigit()
-                        else str(MONTH_NAMES.index(end.lower()) + 1)
-                    )
+                    start = start if start.isdigit() else str(MONTH_NAMES.index(start.lower()) + 1)
+                    end = end if end.isdigit() else str(MONTH_NAMES.index(end.lower()) + 1)
                     self.months += list(range(int(start), int(end) + 1))
         self.months = sorted(self.months)[::step]
 
-    def _parse_year(self, year) -> None:
+    def _parse_year(self, year: str) -> None:
         years, step = _parse_steps(year)
         if years == "*":
             self.years = list(range(datetime.now(tz=self.timezone).year, MAXYEAR))
@@ -222,10 +196,10 @@ class CronJob(object):
                     self.years += list(range(int(start), int(end) + 1))
         self.years = sorted(self.years)[::step]
 
-    def __iter__(self):
+    def __iter__(self) -> "CronJob":
         return self
 
-    def __next__(self):
+    def __next__(self) -> datetime:  # type: ignore
         for i in self.iterator:
             try:
                 try:
@@ -237,8 +211,7 @@ class CronJob(object):
                         if (
                             weekday[-1] == "L"
                             and next_datetime.isoweekday() == int(weekday[:-1])
-                            and (next_datetime + timedelta(days=7)).month
-                            != next_datetime.month
+                            and (next_datetime + timedelta(days=7)).month != next_datetime.month
                         ):
                             return next_datetime
                         elif "#" in weekday:
@@ -247,12 +220,8 @@ class CronJob(object):
                             if next_datetime.isoweekday() != weekday:
                                 continue
                             if (
-                                next_datetime.month
-                                == (
-                                    next_datetime - timedelta(days=7 * (order - 1))
-                                ).month
-                                and next_datetime.month
-                                != (next_datetime - timedelta(days=7 * order)).month
+                                next_datetime.month == (next_datetime - timedelta(days=7 * (order - 1))).month
+                                and next_datetime.month != (next_datetime - timedelta(days=7 * order)).month
                             ):
                                 return next_datetime
                             continue
@@ -284,9 +253,7 @@ class CronJob(object):
                         if next_datetime.isoweekday() == 6:
                             if next_datetime.day == 1:
                                 next_datetime += timedelta(days=2)
-                            elif (next_datetime - timedelta(days=1)) > datetime.now(
-                                tz=self.timezone
-                            ):
+                            elif (next_datetime - timedelta(days=1)) > datetime.now(tz=self.timezone):
                                 next_datetime -= timedelta(days=1)
                         elif next_datetime.isoweekday() in (0, 7):
                             next_datetime += timedelta(days=1)

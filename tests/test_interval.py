@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
-# __credits__ = ["Ronie Martinez"]
-# __maintainer__ = "Ronie Martinez"
-# __email__ = "ronmarti18@gmail.com"
 from collections.abc import Iterator
 from datetime import datetime, timedelta
 
@@ -15,7 +9,7 @@ from doccron import InvalidSchedule
 from doccron.interval_job import IntervalJob
 
 
-def test_every_2_hours():
+def test_every_2_hours() -> None:
     cron = doccron.cron("@every 2h")
     next_schedule = datetime.now(tz=tzlocal()).replace(microsecond=0)
     for _ in range(12):
@@ -23,7 +17,7 @@ def test_every_2_hours():
         assert next(cron) == next_schedule
 
 
-def test_every_2_minutes():
+def test_every_2_minutes() -> None:
     cron = doccron.cron("@every 2m")
     next_schedule = datetime.now(tz=tzlocal()).replace(microsecond=0)
 
@@ -32,7 +26,7 @@ def test_every_2_minutes():
         assert next(cron) == next_schedule
 
 
-def test_every_2_hours_30_minutes():
+def test_every_2_hours_30_minutes() -> None:
     cron = doccron.cron("@every 2h30m")
     next_schedule = datetime.now(tz=tzlocal()).replace(microsecond=0)
 
@@ -41,7 +35,7 @@ def test_every_2_hours_30_minutes():
         assert next(cron) == next_schedule
 
 
-def test_every_2_hours_30_minutes_4_seconds():
+def test_every_2_hours_30_minutes_4_seconds() -> None:
     cron = doccron.cron("@every 2h30m5s")
     next_schedule = datetime.now(tz=tzlocal()).replace(microsecond=0)
 
@@ -50,11 +44,11 @@ def test_every_2_hours_30_minutes_4_seconds():
         assert next(cron) == next_schedule
 
 
-def test_invalid_string():
+def test_invalid_string() -> None:
     with pytest.raises(InvalidSchedule):
         doccron.cron("@every hello")
 
 
-def test_iter_interval_job():
+def test_iter_interval_job() -> None:
     job = iter(IntervalJob(timedelta(minutes=2)))
     assert isinstance(job, Iterator)

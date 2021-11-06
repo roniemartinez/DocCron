@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
-# __credits__ = ["Ronie Martinez"]
-# __maintainer__ = "Ronie Martinez"
-# __email__ = "ronmarti18@gmail.com"
 from datetime import datetime, timedelta
 
 from dateutil.tz import tzlocal
@@ -11,14 +5,12 @@ from dateutil.tz import tzlocal
 import doccron
 
 
-def bar():
+def bar() -> None:
     pass
 
 
-def test_non_infinite_jobs():
-    next_minute = datetime.now(tz=tzlocal()).replace(
-        second=0, microsecond=0
-    ) + timedelta(minutes=1)
+def test_non_infinite_jobs() -> None:
+    next_minute = datetime.now(tz=tzlocal()).replace(second=0, microsecond=0) + timedelta(minutes=1)
     bar.__doc__ = """
     /etc/crontab::
 
@@ -32,8 +24,6 @@ def test_non_infinite_jobs():
     )
     jobs_found = False
     for next_schedule, function_object in doccron.run_jobs(simulate=True):
-        assert next_schedule == datetime.now(tz=tzlocal()).replace(
-            second=0, microsecond=0
-        ) + timedelta(minutes=1)
+        assert next_schedule == datetime.now(tz=tzlocal()).replace(second=0, microsecond=0) + timedelta(minutes=1)
         jobs_found = True
     assert jobs_found
