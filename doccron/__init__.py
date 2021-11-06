@@ -149,7 +149,7 @@ def run_jobs(quartz: bool = False, simulate: bool = False) -> Iterator[Tuple[Any
         logger.info("Simulation started")
         return _job_iter(job_function_map)
     _run_jobs(job_function_map)  # pragma: no cover
-    return iter([])
+    return iter([])  # pragma: no cover
 
 
 def _run_jobs(job_function_map: Dict[Any, Any]) -> None:  # pragma: no cover
