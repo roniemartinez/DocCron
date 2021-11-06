@@ -1,36 +1,31 @@
-#!/usr/bin/env python
-# __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
-# __credits__ = ["Ronie Martinez"]
-# __maintainer__ = "Ronie Martinez"
-# __email__ = "ronmarti18@gmail.com"
 from collections.abc import Iterator
 from datetime import datetime, timedelta
 
 from dateutil.tz import tzlocal
+from freezegun import freeze_time
 
 import doccron
 from doccron.cron_job import CronJob
 
 
-def test_iter_cron_table():
+def test_iter_cron_table() -> None:
     cron = iter(doccron.cron_quartz("* * * * * *"))
     assert isinstance(cron, Iterator)
 
 
-def test_iter_job():
+def test_iter_job() -> None:
     job = iter(CronJob(["*"] * 6, quartz=True))
     assert isinstance(job, Iterator)
 
 
-def test_not_repeated():
+def test_not_repeated() -> None:
     cron = doccron.cron_quartz("* * * * * *\n* * * * * *")
     first = next(cron)
     second = next(cron)
     assert first < second
 
 
-def test_schedule_per_second():
+def test_schedule_per_second() -> None:
     cron = doccron.cron_quartz("* * * * * *")
     assert isinstance(cron, Iterator)
 
@@ -44,7 +39,7 @@ def test_schedule_per_second():
         next_schedule = n
 
 
-def test_schedule_per_second_list():
+def test_schedule_per_second_list() -> None:
     cron = doccron.cron_quartz("0,10,20,30,40,50 * * * * * *")
     assert isinstance(cron, Iterator)
 
@@ -58,7 +53,7 @@ def test_schedule_per_second_list():
         next_schedule = n
 
 
-def test_schedule_per_second_range_step():
+def test_schedule_per_second_range_step() -> None:
     cron = doccron.cron_quartz("0-59/10 * * * * * *")
     assert isinstance(cron, Iterator)
 
@@ -72,7 +67,7 @@ def test_schedule_per_second_range_step():
         next_schedule = n
 
 
-def foo():
+def foo() -> None:
     """
     /etc/crontab::
 
@@ -82,7 +77,8 @@ def foo():
     print("foo")
 
 
-def test_find_functions_with_docstrings():
+@freeze_time("2020-01-01")
+def test_find_functions_with_docstrings() -> None:
     run_count = 0
     jobs_found = False
     for next_schedule, function_object in doccron.run_jobs(quartz=True, simulate=True):

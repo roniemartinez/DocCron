@@ -1,10 +1,5 @@
-#!/usr/bin/env python
-# __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
-# __credits__ = ["Ronie Martinez"]
-# __maintainer__ = "Ronie Martinez"
-# __email__ = "ronmarti18@gmail.com"
-from datetime import timedelta
+from datetime import datetime, timedelta
+from typing import Any, Iterable, Optional, Union
 
 from dateutil.tz import tzfile, tzlocal, tzwin  # type: ignore
 
@@ -13,11 +8,12 @@ from doccron.exceptions import InvalidSchedule
 from doccron.interval_job import IntervalJob
 
 
-class CronTable(object):
-    def __init__(self, jobs, quartz=False):
+class CronTable:
+    def __init__(self, jobs: Iterable[Any], quartz: bool = False):
         self._jobs = {}
-        self._previous_schedule = None
-        self._timezone = tzlocal()
+        self._previous_schedule: Optional[datetime] = None
+        self._timezone: Union[tzlocal, tzfile] = tzlocal()
+        job: Union[IntervalJob, CronJob]
         for j in jobs:
             if isinstance(j, tzfile):
                 self._timezone = j
@@ -37,17 +33,17 @@ class CronTable(object):
                     raise InvalidSchedule
             self._jobs[job] = next(job)
 
-    def __iter__(self):
+    def __iter__(self) -> "CronTable":
         return self
 
-    def __next__(self):
+    def __next__(self) -> datetime:
         while True:
             if not len(self._jobs):
-                return
+                return  # type: ignore
             job, next_schedule = sorted(self._jobs.items(), key=lambda x: x[1])[0]
             if next_schedule is None:
                 del self._jobs[job]
-                return
+                return  # type: ignore
             self._jobs[job] = next(job)
             if self._previous_schedule and next_schedule <= self._previous_schedule:
                 continue

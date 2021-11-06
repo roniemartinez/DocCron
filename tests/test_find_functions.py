@@ -1,15 +1,11 @@
-#!/usr/bin/env python
-# __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
-# __credits__ = ["Ronie Martinez"]
-# __maintainer__ = "Ronie Martinez"
-# __email__ = "ronmarti18@gmail.com"
 from datetime import datetime
+
+from freezegun import freeze_time
 
 import doccron
 
 
-def foo():
+def foo() -> None:
     """
     This function prints "foo"
 
@@ -23,7 +19,7 @@ def foo():
     print("foo")
 
 
-def bar():
+def bar() -> None:
     """
     /etc/crontab::
 
@@ -34,7 +30,7 @@ def bar():
     print("bar")
 
 
-def baz():
+def baz() -> None:
     """
     * * * * * 2021
     * * * * * 2020
@@ -42,7 +38,8 @@ def baz():
     print("baz")
 
 
-def test_find_functions_with_docstrings():
+@freeze_time("2020-01-01")
+def test_find_functions_with_docstrings() -> None:
     run_count = 0
     jobs_found = False
     for next_schedule, function_object in doccron.run_jobs(simulate=True):
