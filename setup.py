@@ -24,7 +24,7 @@ if os.path.exists(readme_path):
 setup(
     long_description=readme,
     name='doccron',
-    version='1.6.1-alpha.0',
+    version='1.6.1',
     description='Schedule with Docstrings',
     python_requires='<4,>=3.6.2',
     project_urls={"repository": "https://github.com/roniemartinez/DocCron"},
