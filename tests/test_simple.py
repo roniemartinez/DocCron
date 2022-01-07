@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 import pytest
 from dateutil.tz import tzlocal
+from freezegun import freeze_time
 
 import doccron
 from doccron.cron_job import CronJob
@@ -48,6 +49,7 @@ def test_schedule_per_minute() -> None:
         assert next_schedule == current_datetime + timedelta(minutes=i)
 
 
+@freeze_time("2020-01-01")
 def test_before_year_end() -> None:
     cron = doccron.cron("59 23 31 12 5 *")
     assert next(cron) == localize(datetime(2021, 12, 31, 23, 59))
@@ -55,6 +57,7 @@ def test_before_year_end() -> None:
     assert next(cron) == localize(datetime(2032, 12, 31, 23, 59))
 
 
+@freeze_time("2020-01-01")
 def test_abbreviated_month_name() -> None:
     cron = doccron.cron("59 23 31 dec 5 *")
     assert next(cron) == localize(datetime(2021, 12, 31, 23, 59))
@@ -62,6 +65,7 @@ def test_abbreviated_month_name() -> None:
     assert next(cron) == localize(datetime(2032, 12, 31, 23, 59))
 
 
+@freeze_time("2020-01-01")
 def test_abbreviated_weekday_name() -> None:
     cron = doccron.cron("59 23 31 12 fri *")
     assert next(cron) == localize(datetime(2021, 12, 31, 23, 59))
