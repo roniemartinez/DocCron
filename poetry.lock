@@ -822,7 +822,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-freezegun"
-version = "1.1.5"
+version = "1.1.6"
 description = "Typing stubs for freezegun"
 category = "dev"
 optional = false
@@ -897,7 +897,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.6.2, <4"
-content-hash = "11afdcd31e4e9203aaf94285e941e679f18517be520e1c5363bfe17bffeeea04"
+content-hash = "bd10de7a3cf676ce29ae3cd860eca4f7a4e3fe9a3598fee876b1d208d5282422"
 
 [metadata.files]
 aiohttp = [
@@ -1571,8 +1571,8 @@ typed-ast = [
     {file = "typed_ast-1.4.3.tar.gz", hash = "sha256:fb1bbeac803adea29cedd70781399c99138358c26d05fcbd23c13016b7f5ec65"},
 ]
 types-freezegun = [
-    {file = "types-freezegun-1.1.5.tar.gz", hash = "sha256:13eb8d9eb22758461150cd0eb9bd7ab88679ec8c9ffc30224941542c775774a9"},
-    {file = "types_freezegun-1.1.5-py3-none-any.whl", hash = "sha256:98b7148850fa939a0bbe89a230fed891c545a02d24305827398d0281923f0576"},
+    {file = "types-freezegun-1.1.6.tar.gz", hash = "sha256:5c70a4b7444b8c7dd2800e0063d6fe721ab11209399264fa0f77af253dd8b14f"},
+    {file = "types_freezegun-1.1.6-py3-none-any.whl", hash = "sha256:eaa4ccac7f4ff92762b6e5d34c3c4e41a7763b6d09a8595e0224ff1f24c9d4e1"},
 ]
 types-python-dateutil = [
     {file = "types-python-dateutil-2.8.6.tar.gz", hash = "sha256:83bc1424f7675c23f6d9a7673cc04e5acdb4aca885962c4d6d631bd114aa4c5f"},
