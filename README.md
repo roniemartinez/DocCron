@@ -1,38 +1,33 @@
-# DocCron
-
-Schedule with Docstrings
-
 <table>
     <tr>
         <td>License</td>
-        <td><img src='https://img.shields.io/pypi/l/DocCron.svg' alt="License"></td>
+        <td><img src='https://img.shields.io/pypi/l/DocCron.svg?style=for-the-badge' alt="License"></td>
         <td>Version</td>
-        <td><img src='https://img.shields.io/pypi/v/DocCron.svg' alt="Version"></td>
+        <td><img src='https://img.shields.io/pypi/v/DocCron.svg?logo=pypi&style=for-the-badge' alt="Version"></td>
     </tr>
     <tr>
         <td>Github Actions</td>
-        <td><img src='https://github.com/roniemartinez/DocCron/actions/workflows/python.yml/badge.svg' alt="Github Actions"></td>
+        <td><img src='https://img.shields.io/github/workflow/status/roniemartinez/DocCron/Python?label=actions&logo=github%20actions&style=for-the-badge' alt="Github Actions"></td>
         <td>Coverage</td>
-        <td><img src='https://codecov.io/gh/roniemartinez/DocCron/branch/master/graph/badge.svg' alt="CodeCov"></td>
+        <td><img src='https://img.shields.io/codecov/c/github/roniemartinez/DocCron/branch?label=codecov&logo=codecov&style=for-the-badge' alt="CodeCov"></td>
     </tr>
     <tr>
         <td>Supported versions</td>
-        <td><img src='https://img.shields.io/pypi/pyversions/DocCron.svg' alt="Python Versions"></td>
+        <td><img src='https://img.shields.io/pypi/pyversions/DocCron.svg?logo=python&style=for-the-badge' alt="Python Versions"></td>
         <td>Wheel</td>
-        <td><img src='https://img.shields.io/pypi/wheel/DocCron.svg' alt="Wheel"></td>
+        <td><img src='https://img.shields.io/pypi/wheel/DocCron.svg?style=for-the-badge' alt="Wheel"></td>
     </tr>
     <tr>
         <td>Status</td>
-        <td><img src='https://img.shields.io/pypi/status/DocCron.svg' alt="Status"></td>
+        <td><img src='https://img.shields.io/pypi/status/DocCron.svg?style=for-the-badge' alt="Status"></td>
         <td>Downloads</td>
-        <td><img src='https://img.shields.io/pypi/dm/DocCron.svg' alt="Downloads"></td>
+        <td><img src='https://img.shields.io/pypi/dm/DocCron.svg?style=for-the-badge' alt="Downloads"></td>
     </tr>
 </table>
 
-## Support
-If you like `DocCron` or if it is useful to you, show your support by buying me a coffee.
+# DocCron
 
-<a href="https://www.buymeacoffee.com/roniemartinez" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+Schedule with Docstrings
 
 ## Installation
 
