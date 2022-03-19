@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "doccron"
-version = "1.6.2"
+version = "1.6.3"
 description = "Schedule with Docstrings"
 authors = ["Ronie Martinez <ronmarti18@gmail.com>"]
 license = "MIT"
