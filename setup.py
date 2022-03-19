@@ -24,7 +24,7 @@ if os.path.exists(readme_path):
 setup(
     long_description=readme,
     name='doccron',
-    version='1.6.2',
+    version='1.6.3',
     description='Schedule with Docstrings',
     python_requires='==3.*,>=3.7.0',
     project_urls={"repository": "https://github.com/roniemartinez/DocCron"},
@@ -37,5 +37,5 @@ setup(
     package_dir={"": "."},
     package_data={},
     install_requires=['python-dateutil==2.*,>=2.8.1'],
-    extras_require={"dev": ["autoflake==1.*,>=1.3.1", "black==22.*,>=22.1.0", "codecov==2.*,>=2.0.16", "dephell==0.*,>=0.8.3", "flake8==4.*,>=4.0.1", "freezegun==1.*,>=1.2.0", "isort==5.*,>=5.10.1", "mypy==0.*,>=0.941.0", "pyproject-flake8==0.*,>=0.0.1.a2", "pytest==7.*,>=7.0.1", "pytest-cov==3.*,>=3.0.0", "tomlkit==0.7.0", "types-freezegun==1.*,>=1.1.7", "types-python-dateutil==2.*,>=2.8.10"]},
+    extras_require={"dev": ["autoflake==1.*,>=1.3.1", "black==22.*,>=22.1.0", "dephell==0.*,>=0.8.3", "flake8==4.*,>=4.0.1", "freezegun==1.*,>=1.2.1", "isort==5.*,>=5.10.1", "mypy==0.*,>=0.941.0", "pyproject-flake8==0.*,>=0.0.1.a2", "pytest==7.*,>=7.0.1", "pytest-cov==3.*,>=3.0.0", "tomlkit==0.7.0", "types-freezegun==1.*,>=1.1.7", "types-python-dateutil==2.*,>=2.8.10"]},
 )
